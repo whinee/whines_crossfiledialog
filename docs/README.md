@@ -112,6 +112,11 @@ Returns:
 
 ## Getting Started
 
+Install the following dependencies
+
+- Python 3.12
+- [just](https://just.systems/)
+
 In Linux, run the following command:
 
 ```sh
