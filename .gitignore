@@ -1,4 +1,18 @@
 
+.history/
+
+# User-defined Ignored Files
+**/*.bak
+**/*.bak.*
+**/*.class
+**/*.test.*
+**/*.old
+**/*.old.*
+**/t[0-9]*.*
+**/test.*
+
+###
+
 # Created by https://www.toptal.com/developers/gitignore/api/python,vim,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,vim,linux
 

@@ -1,7 +1,7 @@
 import os
 import sys
-
 from subprocess import PIPE, Popen
+from typing import Optional
 
 from crossfiledialog import strings
 from crossfiledialog.exceptions import FileDialogException
@@ -11,7 +11,7 @@ class KDialogException(FileDialogException):
     pass
 
 
-last_cwd = None
+last_cwd: Optional[str] = None
 
 
 def get_preferred_cwd():
@@ -29,9 +29,9 @@ def set_last_cwd(cwd):
     last_cwd = os.path.dirname(cwd)
 
 
-def run_kdialog(*args, **kwargs):
+def run_kdialog(*args, **kwargs):  # noqa: C901
     cmdlist = ['kdialog']
-    cmdlist.extend('--{0}'.format(arg) for arg in args)
+    cmdlist.extend('--{}'.format(arg) for arg in args)
 
     if "start_dir" in kwargs:
         cmdlist.append(kwargs.pop("start_dir"))
@@ -40,28 +40,28 @@ def run_kdialog(*args, **kwargs):
         cmdlist.append(kwargs.pop("filter"))
 
     for k, v in kwargs.items():
-        cmdlist.append('--{0}'.format(k))
+        cmdlist.append('--{}'.format(k))
         cmdlist.append(v)
 
-    extra_kwargs = dict()
+    extra_kwargs = {}
     preferred_cwd = get_preferred_cwd()
     if preferred_cwd:
         extra_kwargs['cwd'] = preferred_cwd
 
-    process = Popen(cmdlist, stdout=PIPE, stderr=PIPE, **extra_kwargs)
+    process = Popen(cmdlist, stdout=PIPE, stderr=PIPE, **extra_kwargs)  # noqa: S603
     stdout, stderr = process.communicate()
 
     if process.returncode == -1:
         raise KDialogException("Unexpected error during kdialog call")
 
-    stdout, stderr = stdout.decode(), stderr.decode()
+    stdout, stderr = stdout.decode(), stderr.decode() # type: ignore
     if stderr.strip():
         sys.stderr.write(stderr)
 
     return stdout.strip()
 
 
-def open_file(title=strings.open_file, start_dir=None, filter=None):
+def open_file(title=strings.open_file, start_dir=None, filter=None):  # noqa: C901
     """
     Open a file selection dialog for selecting a file using KDialog.
 
@@ -76,8 +76,9 @@ def open_file(title=strings.open_file, start_dir=None, filter=None):
 
     Example:
         result = open_file(title="Select a file", start_dir="/path/to/starting/directory", filter="*.txt")
+
     """
-    kdialog_kwargs = dict(title=title)
+    kdialog_kwargs = {'title': title}
 
     if start_dir:
         kdialog_kwargs["start_dir"] = start_dir
@@ -102,14 +103,14 @@ def open_file(title=strings.open_file, start_dir=None, filter=None):
             filters = []
             for key, value in filter.items():
                 if isinstance(value, str):
-                    filters.append("{0} ({1})".format(key, value))
+                    filters.append("{} ({})".format(key, value))
                 elif isinstance(value, list):
-                    filters.append("{0} ({1})".format(key, ' '.join(value)))
+                    filters.append("{} ({})".format(key, ' '.join(value)))
                 else:
                     raise ValueError("Invalid filter")
 
             kdialog_kwargs["filter"] = " | ".join(
-                filters
+                filters,
             )
         else:
             raise ValueError("Invalid filter")
@@ -120,7 +121,7 @@ def open_file(title=strings.open_file, start_dir=None, filter=None):
     return result
 
 
-def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):
+def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):  # noqa: C901
     """
     Open a file selection dialog for selecting multiple files using KDialog.
 
@@ -136,8 +137,9 @@ def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):
     Example:
         result = open_multiple(title="Select multiple files",
         start_dir="/path/to/starting/directory", filter="*.txt")
+
     """
-    kdialog_kwargs = dict(title=title)
+    kdialog_kwargs = {'title': title}
 
     if start_dir:
         kdialog_kwargs["start_dir"] = start_dir
@@ -162,14 +164,14 @@ def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):
             filters = []
             for key, value in filter.items():
                 if isinstance(value, str):
-                    filters.append("{0} ({1})".format(key, value))
+                    filters.append("{} ({})".format(key, value))
                 elif isinstance(value, list):
-                    filters.append("{0} ({1})".format(key, ' '.join(value)))
+                    filters.append("{} ({})".format(key, ' '.join(value)))
                 else:
                     raise ValueError("Invalid filter")
 
             kdialog_kwargs["filter"] = " | ".join(
-                filters
+                filters,
             )
         else:
             raise ValueError("Invalid filter")
@@ -196,9 +198,10 @@ def save_file(title=strings.save_file, start_dir=None):
 
     Example:
         result = save_file(title="Save file", start_dir="/path/to/starting/directory")
+
     """
     kdialog_args = ['getsavefilename']
-    kdialog_kwargs = dict(title=title)
+    kdialog_kwargs = {'title': title}
 
     if start_dir:
         kdialog_kwargs["start_dir"] = start_dir
@@ -223,8 +226,9 @@ def choose_folder(title=strings.choose_folder, start_dir=None):
 
     Example:
         result = choose_folder(title="Select folder", start_dir="/path/to/starting/directory")
+
     """
-    kdialog_kwargs = dict(title=title)
+    kdialog_kwargs = {'title': title}
 
     if start_dir:
         kdialog_kwargs["start_dir"] = start_dir
@@ -235,4 +239,4 @@ def choose_folder(title=strings.choose_folder, start_dir=None):
     return result
 
 
-__all__ = ['open_file', 'open_multiple', 'save_file', 'choose_folder']
+__all__ = ['choose_folder', 'open_file', 'open_multiple', 'save_file']

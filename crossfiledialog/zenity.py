@@ -1,7 +1,7 @@
 import os
 import sys
-
 from subprocess import PIPE, Popen
+from typing import Optional
 
 from crossfiledialog import strings
 from crossfiledialog.exceptions import FileDialogException
@@ -11,7 +11,7 @@ class ZenityException(FileDialogException):
     pass
 
 
-last_cwd = None
+last_cwd: Optional[str] = None
 
 
 def get_preferred_cwd():
@@ -31,21 +31,21 @@ def set_last_cwd(cwd):
 
 def run_zenity(*args, **kwargs):
     cmdlist = ['zenity']
-    cmdlist.extend('--{0}'.format(arg) for arg in args)
-    cmdlist.extend('--{0}={1}'.format(k, v) for k, v in kwargs.items())
+    cmdlist.extend('--{}'.format(arg) for arg in args)
+    cmdlist.extend('--{}={}'.format(k, v) for k, v in kwargs.items())
 
-    extra_kwargs = dict()
+    extra_kwargs = {}
     preferred_cwd = get_preferred_cwd()
     if preferred_cwd:
         extra_kwargs['cwd'] = preferred_cwd
 
-    process = Popen(cmdlist, stdout=PIPE, stderr=PIPE, **extra_kwargs)
+    process = Popen(cmdlist, stdout=PIPE, stderr=PIPE, **extra_kwargs)  # noqa: S603
     stdout, stderr = process.communicate()
 
     if process.returncode == -1:
         raise ZenityException("Unexpected error during zenity call")
 
-    stdout, stderr = stdout.decode(), stderr.decode()
+    stdout, stderr = stdout.decode(), stderr.decode() # type: ignore
 
     if stderr.strip():
         sys.stderr.write(stderr)
@@ -53,7 +53,7 @@ def run_zenity(*args, **kwargs):
     return stdout.strip()
 
 
-def open_file(title=strings.open_file, start_dir=None, filter=None):
+def open_file(title=strings.open_file, start_dir=None, filter=None):  # noqa: C901
     """
     Open a file selection dialog for selecting a file using Zenity.
 
@@ -68,9 +68,10 @@ def open_file(title=strings.open_file, start_dir=None, filter=None):
 
     Example:
         result = open_file(title="Select a file", start_dir="/path/to/starting/directory", filter="*.txt")
+
     """
-    zenity_args = []
-    zenity_kwargs = dict(title=title)
+    zenity_args: list[str] = []
+    zenity_kwargs = {'title': title}
 
     if start_dir:
         # If the path doesn't end with a backslash, Zenity only
@@ -88,14 +89,14 @@ def open_file(title=strings.open_file, start_dir=None, filter=None):
             if isinstance(filter[0], str):
                 zenity_kwargs["file-filter"] = " ".join(filter)
             elif isinstance(filter[0], list):
-                zenity_args.extend("file-filter={0}".format(' '.join(f)) for f in filter)
+                zenity_args.extend("file-filter={}".format(' '.join(f)) for f in filter)
         elif isinstance(filter, dict):
             # Filter is a dictionary mapping descriptions to wildcards.
             for key, value in filter.items():
                 if isinstance(value, str):
-                    zenity_args.append("file-filter={0} | {1}".format(key, value))
+                    zenity_args.append("file-filter={} | {}".format(key, value))
                 elif isinstance(value, list):
-                    zenity_args.append("file-filter={0} | {1}".format(key, ' | '.join(value)))
+                    zenity_args.append("file-filter={} | {}".format(key, ' | '.join(value)))
                 else:
                     raise ValueError("Invalid filter")
         else:
@@ -107,7 +108,7 @@ def open_file(title=strings.open_file, start_dir=None, filter=None):
     return result
 
 
-def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):
+def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):  # noqa: C901
     """
     Open a file selection dialog for selecting multiple files using Zenity.
 
@@ -123,9 +124,10 @@ def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):
     Example:
         result = open_multiple(title="Select multiple files",
         start_dir="/path/to/starting/directory", filter="*.txt")
+
     """
-    zenity_args = []
-    zenity_kwargs = dict(title=title)
+    zenity_args: list[str] = []
+    zenity_kwargs = {'title': title}
 
     if start_dir:
         # If the path doesn't end with a backslash, Zenity only starts in the parent directory
@@ -143,14 +145,14 @@ def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):
             if isinstance(filter[0], str):
                 zenity_kwargs["file-filter"] = " ".join(filter)
             elif isinstance(filter[0], list):
-                zenity_args.extend("file-filter={0}".format(' '.join(f)) for f in filter)
+                zenity_args.extend("file-filter={}".format(' '.join(f)) for f in filter)
         elif isinstance(filter, dict):
             # Filter is a dictionary mapping descriptions to wildcards.
             for key, value in filter.items():
                 if isinstance(value, str):
-                    zenity_args.append("file-filter={0} | {1}".format(key, value))
+                    zenity_args.append("file-filter={} | {}".format(key, value))
                 elif isinstance(value, list):
-                    zenity_args.append("file-filter={0} | {1}".format(key, ' | '.join(value)))
+                    zenity_args.append("file-filter={} | {}".format(key, ' | '.join(value)))
                 else:
                     raise ValueError("Invalid filter")
         else:
@@ -178,9 +180,10 @@ def save_file(title=strings.save_file, start_dir=None):
 
     Example:
         result = save_file(title="Save file", start_dir="/path/to/starting/directory")
+
     """
     zenity_args = ['file-selection', 'save', 'confirm-overwrite']
-    zenity_kwargs = dict(title=title)
+    zenity_kwargs = {'title': title}
 
     if start_dir:
         # If the path doesn't end with a backslash, Zenity only starts in the parent directory
@@ -209,8 +212,9 @@ def choose_folder(title=strings.choose_folder, start_dir=None):
 
     Example:
         result = choose_folder(title="Select folder", start_dir="/path/to/starting/directory")
+
     """
-    zenity_kwargs = dict(title=title)
+    zenity_kwargs = {'title': title}
 
     if start_dir:
         # If the path doesn't end with a backslash, Zenity only starts in the parent directory
@@ -225,4 +229,4 @@ def choose_folder(title=strings.choose_folder, start_dir=None):
     return result
 
 
-__all__ = ['open_file', 'open_multiple', 'save_file', 'choose_folder']
+__all__ = ['choose_folder', 'open_file', 'open_multiple', 'save_file']

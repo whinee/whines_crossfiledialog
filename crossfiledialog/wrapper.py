@@ -20,18 +20,18 @@ if sys.platform == 'linux':
     zenity_binary = which('zenity')
 
     if kdialog_binary and (probably_kde or not zenity_binary):
-        from crossfiledialog.kdialog import *
+        from crossfiledialog.kdialog import *  # noqa: F403
     elif zenity_binary:
-        from crossfiledialog.zenity import *
+        from crossfiledialog.zenity import *  # noqa: F403
     else:
-        raise NoImplementationFoundException()
+        raise NoImplementationFoundException
 
 elif sys.platform == 'win32':
-    from crossfiledialog.win32 import *
+    from crossfiledialog.win32 import *  # noqa: F403
 
 else:
-    raise NoImplementationFoundException()
+    raise NoImplementationFoundException
 
 
-__all__ = ['open_file', 'open_multiple', 'save_file', 'choose_folder']
+__all__ = ['choose_folder', 'open_file', 'open_multiple', 'save_file']  # noqa: F405
 

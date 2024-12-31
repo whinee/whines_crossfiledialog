@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 
 import sys
-
 from distutils.core import setup
 
-
-requirements = []
+requirements: list[str] = []
 
 if sys.platform == 'win32':
     requirements.append('pywin32')
@@ -15,7 +13,7 @@ description = 'A Python wrapper for opening files and folders with the native fi
 
 try:
     long_description = open('README.md').read()
-except:
+except:  # noqa: E722
     long_description = description
 
 

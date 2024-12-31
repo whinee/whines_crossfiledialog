@@ -1,24 +1,29 @@
 import os
+from typing import Optional
 
 from crossfiledialog import strings
-from crossfiledialog.exceptions import NoImplementationFoundException, FileDialogException
+from crossfiledialog.exceptions import (
+    FileDialogException,
+    NoImplementationFoundException,
+)
 
 try:
-    import pywintypes
-    import win32gui
-    import win32con
-    from win32com.shell import shell, shellcon
+    import pywintypes  # type: ignore
+    import win32con  # type: ignore
+    import win32gui  # type: ignore
+    from win32com.shell import shell, shellcon  # type: ignore
 
 except ImportError:
     raise NoImplementationFoundException(
-        "Running 'filedialog' on Windows requires the 'pywin32' package.")
+        "Running 'filedialog' on Windows requires the 'pywin32' package.",
+    ) from None
 
 
 class Win32Exception(FileDialogException):
     pass
 
 
-last_cwd = None
+last_cwd: Optional[str] = None
 
 
 def get_preferred_cwd():
@@ -53,7 +58,7 @@ def error_handling_wrapper(struct, **kwargs):
         return None
 
 
-def open_file(title=strings.open_file, start_dir=None, filter=None):
+def open_file(title=strings.open_file, start_dir=None, filter=None):  # noqa: C901
     """
     Open a file selection dialog for selecting a file using the Windows API.
 
@@ -68,8 +73,9 @@ def open_file(title=strings.open_file, start_dir=None, filter=None):
 
     Example:
         result = open_file(title="Select a file", start_dir="C:/Documents", filter="*.txt")
+
     """
-    win_kwargs = dict(Title=title)
+    win_kwargs = {"Title": title}
 
     if start_dir:
         win_kwargs["InitialDir"] = start_dir
@@ -94,9 +100,9 @@ def open_file(title=strings.open_file, start_dir=None, filter=None):
             filters = ""
             for key, value in filter.items():
                 if isinstance(value, str):
-                    filters += "{0}\0{1}\0".format(key, value)
+                    filters += "{}\0{}\0".format(key, value)
                 elif isinstance(value, list):
-                    filters += "{0}\0{1}\0".format(key, ';'.join(value))
+                    filters += "{}\0{}\0".format(key, ';'.join(value))
                 else:
                     raise ValueError("Invalid filter")
 
@@ -106,7 +112,7 @@ def open_file(title=strings.open_file, start_dir=None, filter=None):
 
     file_name = error_handling_wrapper(
         win32gui.GetOpenFileNameW,
-        **win_kwargs
+        **win_kwargs,
     )
 
     if file_name:
@@ -114,7 +120,7 @@ def open_file(title=strings.open_file, start_dir=None, filter=None):
     return file_name
 
 
-def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):
+def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):  # noqa: C901
     """
     Open a file selection dialog for selecting multiple files using the Windows API.
 
@@ -129,8 +135,9 @@ def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):
 
     Example:
         result = open_multiple(title="Select multiple files", start_dir="C:/Documents", filter="*.txt")
+
     """
-    win_kwargs = dict(Title=title)
+    win_kwargs = {"Title": title}
 
     if start_dir:
         win_kwargs["InitialDir"] = start_dir
@@ -155,9 +162,9 @@ def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):
             filters = ""
             for key, value in filter.items():
                 if isinstance(value, str):
-                    filters += "{0}\0{1}\0".format(key, value)
+                    filters += "{}\0{}\0".format(key, value)
                 elif isinstance(value, list):
-                    filters += "{0}\0{1}\0".format(key, ';'.join(value))
+                    filters += "{}\0{}\0".format(key, ';'.join(value))
                 else:
                     raise ValueError("Invalid filter")
 
@@ -198,8 +205,9 @@ def save_file(title=strings.save_file, start_dir=None):
 
     Example:
         result = save_file(title="Save file", start_dir="C:/Documents")
+
     """
-    win_kwargs = dict(Title=title)
+    win_kwargs = {"Title": title}
 
     if start_dir:
         win_kwargs["InitialDir"] = start_dir
@@ -229,6 +237,7 @@ def choose_folder(title=strings.choose_folder, start_dir=None):
 
     Example:
         result = choose_folder(title="Choose folder", start_dir="C:/Documents")
+
     """
     if start_dir:
         start_pidl, _ = shell.SHParseDisplayName(start_dir, 0, None)
@@ -238,8 +247,8 @@ def choose_folder(title=strings.choose_folder, start_dir=None):
         # default directory is the desktop
         start_pidl = shell.SHGetFolderLocation(0, shellcon.CSIDL_DESKTOP, 0, 0)
     pidl, display_name, image_list = shell.SHBrowseForFolder(
-        win32gui.GetDesktopWindow(), start_pidl,
-        title, 0, None, None
+        win32gui.GetDesktopWindow(), start_pidl, # type: ignore
+        title, 0, None, None,
     )
 
     if pidl:
@@ -248,4 +257,4 @@ def choose_folder(title=strings.choose_folder, start_dir=None):
         return path
 
 
-__all__ = ['open_file', 'open_multiple', 'save_file', 'choose_folder']
+__all__ = ['choose_folder', 'open_file', 'open_multiple', 'save_file']

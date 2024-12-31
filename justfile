@@ -1,0 +1,28 @@
+# Constants
+
+# Choose recipes
+default:
+    @ just -lu; printf '%s ' press Enter to continue; read; just --choose
+
+[private]
+nio:
+    @ python -m no_implicit_optional school; exit 0
+
+[private]
+ruff:
+    @ python -m ruff check school --fix; exit 0
+
+# Set up development environment
+[unix]
+bootstrap:
+    #!/usr/bin/env bash
+    python3.12 -m venv --system-site-packages .venv
+    source .venv/bin/activate
+    rm -rf poetry.lock
+    poetry install --no-root --with dev
+
+# Lint codebase
+lint:
+    @ just nio
+    @ python -m black -q school
+    @ just ruff

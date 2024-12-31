@@ -1,1 +1,1 @@
-from crossfiledialog.wrapper import *
+from crossfiledialog.wrapper import *  # noqa: F403
