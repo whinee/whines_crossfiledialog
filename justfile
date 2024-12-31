@@ -6,11 +6,11 @@ default:
 
 [private]
 nio:
-    @ python -m no_implicit_optional school; exit 0
+    @ python -m no_implicit_optional crossfiledialog; exit 0
 
 [private]
 ruff:
-    @ python -m ruff check school --fix; exit 0
+    @ python -m ruff check crossfiledialog --fix; exit 0
 
 # Set up development environment
 [unix]
@@ -24,5 +24,5 @@ bootstrap:
 # Lint codebase
 lint:
     @ just nio
-    @ python -m black -q school
+    @ python -m black -q crossfiledialog
     @ just ruff

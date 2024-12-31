@@ -110,6 +110,39 @@ Parameters:
 Returns:
  - str: The selected folder's path.
 
+## Getting Started
+
+In Linux, run the following command:
+
+```sh
+just bootstrap
+```
+
+or:
+
+```sh
+python3.12 -m venv --system-site-packages .venv
+source .venv/bin/activate
+rm -rf poetry.lock
+poetry install --no-root --with dev
+```
+
+## Linting
+
+In any platform, run the following command:
+
+```sh
+just lint
+```
+
+or:
+
+```sh
+python -m no_implicit_optional crossfiledialog
+python -m black -q school
+python -m ruff check crossfiledialog --fix
+```
+
 ## License
 
 Licensed under the GNU GPL 3.0
