@@ -15,7 +15,7 @@ last_cwd: Optional[str] = None
 
 
 def get_preferred_cwd():
-    possible_cwd = os.environ.get('FILEDIALOG_CWD', '')
+    possible_cwd = os.environ.get("FILEDIALOG_CWD", "")
     if possible_cwd:
         return possible_cwd
 
@@ -30,14 +30,14 @@ def set_last_cwd(cwd):
 
 
 def run_zenity(*args, **kwargs):
-    cmdlist = ['zenity']
-    cmdlist.extend('--{}'.format(arg) for arg in args)
-    cmdlist.extend('--{}={}'.format(k, v) for k, v in kwargs.items())
+    cmdlist = ["zenity"]
+    cmdlist.extend("--{}".format(arg) for arg in args)
+    cmdlist.extend("--{}={}".format(k, v) for k, v in kwargs.items())
 
     extra_kwargs = {}
     preferred_cwd = get_preferred_cwd()
     if preferred_cwd:
-        extra_kwargs['cwd'] = preferred_cwd
+        extra_kwargs["cwd"] = preferred_cwd
 
     process = Popen(cmdlist, stdout=PIPE, stderr=PIPE, **extra_kwargs)  # noqa: S603
     stdout, stderr = process.communicate()
@@ -45,7 +45,7 @@ def run_zenity(*args, **kwargs):
     if process.returncode == -1:
         raise ZenityException("Unexpected error during zenity call")
 
-    stdout, stderr = stdout.decode(), stderr.decode() # type: ignore
+    stdout, stderr = stdout.decode(), stderr.decode()  # type: ignore
 
     if stderr.strip():
         sys.stderr.write(stderr)
@@ -71,7 +71,7 @@ def open_file(title=strings.open_file, start_dir=None, filter=None):  # noqa: C9
 
     """
     zenity_args: list[str] = []
-    zenity_kwargs = {'title': title}
+    zenity_kwargs = {"title": title}
 
     if start_dir:
         # If the path doesn't end with a backslash, Zenity only
@@ -89,26 +89,32 @@ def open_file(title=strings.open_file, start_dir=None, filter=None):  # noqa: C9
             if isinstance(filter[0], str):
                 zenity_kwargs["file-filter"] = " ".join(filter)
             elif isinstance(filter[0], list):
-                zenity_args.extend("file-filter={}".format(' '.join(f)) for f in filter)
+                zenity_args.extend("file-filter={}".format(" ".join(f)) for f in filter)
         elif isinstance(filter, dict):
             # Filter is a dictionary mapping descriptions to wildcards.
             for key, value in filter.items():
                 if isinstance(value, str):
                     zenity_args.append("file-filter={} | {}".format(key, value))
                 elif isinstance(value, list):
-                    zenity_args.append("file-filter={} | {}".format(key, ' | '.join(value)))
+                    zenity_args.append(
+                        "file-filter={} | {}".format(key, " | ".join(value)),
+                    )
                 else:
                     raise ValueError("Invalid filter")
         else:
             raise ValueError("Invalid filter")
 
-    result = run_zenity('file-selection', *zenity_args, **zenity_kwargs)
+    result = run_zenity("file-selection", *zenity_args, **zenity_kwargs)
     if result:
         set_last_cwd(result)
     return result
 
 
-def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):  # noqa: C901
+def open_multiple(  # noqa: C901
+    title=strings.open_multiple,
+    start_dir=None,
+    filter=None,
+):
     """
     Open a file selection dialog for selecting multiple files using Zenity.
 
@@ -127,7 +133,7 @@ def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):  # 
 
     """
     zenity_args: list[str] = []
-    zenity_kwargs = {'title': title}
+    zenity_kwargs = {"title": title}
 
     if start_dir:
         # If the path doesn't end with a backslash, Zenity only starts in the parent directory
@@ -145,21 +151,23 @@ def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):  # 
             if isinstance(filter[0], str):
                 zenity_kwargs["file-filter"] = " ".join(filter)
             elif isinstance(filter[0], list):
-                zenity_args.extend("file-filter={}".format(' '.join(f)) for f in filter)
+                zenity_args.extend("file-filter={}".format(" ".join(f)) for f in filter)
         elif isinstance(filter, dict):
             # Filter is a dictionary mapping descriptions to wildcards.
             for key, value in filter.items():
                 if isinstance(value, str):
                     zenity_args.append("file-filter={} | {}".format(key, value))
                 elif isinstance(value, list):
-                    zenity_args.append("file-filter={} | {}".format(key, ' | '.join(value)))
+                    zenity_args.append(
+                        "file-filter={} | {}".format(key, " | ".join(value)),
+                    )
                 else:
                     raise ValueError("Invalid filter")
         else:
             raise ValueError("Invalid filter")
 
-    result = run_zenity('file-selection', 'multiple', *zenity_args, **zenity_kwargs)
-    split_result = result.split('|')
+    result = run_zenity("file-selection", "multiple", *zenity_args, **zenity_kwargs)
+    split_result = result.split("|")
     if split_result:
         set_last_cwd(split_result[0])
         return split_result
@@ -182,8 +190,8 @@ def save_file(title=strings.save_file, start_dir=None):
         result = save_file(title="Save file", start_dir="/path/to/starting/directory")
 
     """
-    zenity_args = ['file-selection', 'save', 'confirm-overwrite']
-    zenity_kwargs = {'title': title}
+    zenity_args = ["file-selection", "save", "confirm-overwrite"]
+    zenity_kwargs = {"title": title}
 
     if start_dir:
         # If the path doesn't end with a backslash, Zenity only starts in the parent directory
@@ -214,7 +222,7 @@ def choose_folder(title=strings.choose_folder, start_dir=None):
         result = choose_folder(title="Select folder", start_dir="/path/to/starting/directory")
 
     """
-    zenity_kwargs = {'title': title}
+    zenity_kwargs = {"title": title}
 
     if start_dir:
         # If the path doesn't end with a backslash, Zenity only starts in the parent directory
@@ -223,10 +231,10 @@ def choose_folder(title=strings.choose_folder, start_dir=None):
             start_dir += "/"
         zenity_kwargs["filename"] = start_dir
 
-    result = run_zenity('file-selection', 'directory', **zenity_kwargs)
+    result = run_zenity("file-selection", "directory", **zenity_kwargs)
     if result:
         set_last_cwd(result)
     return result
 
 
-__all__ = ['choose_folder', 'open_file', 'open_multiple', 'save_file']
+__all__ = ["choose_folder", "open_file", "open_multiple", "save_file"]

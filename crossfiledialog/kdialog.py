@@ -15,7 +15,7 @@ last_cwd: Optional[str] = None
 
 
 def get_preferred_cwd():
-    possible_cwd = os.environ.get('FILEDIALOG_CWD', '')
+    possible_cwd = os.environ.get("FILEDIALOG_CWD", "")
     if possible_cwd:
         return possible_cwd
 
@@ -30,8 +30,8 @@ def set_last_cwd(cwd):
 
 
 def run_kdialog(*args, **kwargs):  # noqa: C901
-    cmdlist = ['kdialog']
-    cmdlist.extend('--{}'.format(arg) for arg in args)
+    cmdlist = ["kdialog"]
+    cmdlist.extend("--{}".format(arg) for arg in args)
 
     if "start_dir" in kwargs:
         cmdlist.append(kwargs.pop("start_dir"))
@@ -40,13 +40,13 @@ def run_kdialog(*args, **kwargs):  # noqa: C901
         cmdlist.append(kwargs.pop("filter"))
 
     for k, v in kwargs.items():
-        cmdlist.append('--{}'.format(k))
+        cmdlist.append("--{}".format(k))
         cmdlist.append(v)
 
     extra_kwargs = {}
     preferred_cwd = get_preferred_cwd()
     if preferred_cwd:
-        extra_kwargs['cwd'] = preferred_cwd
+        extra_kwargs["cwd"] = preferred_cwd
 
     process = Popen(cmdlist, stdout=PIPE, stderr=PIPE, **extra_kwargs)  # noqa: S603
     stdout, stderr = process.communicate()
@@ -54,22 +54,31 @@ def run_kdialog(*args, **kwargs):  # noqa: C901
     if process.returncode == -1:
         raise KDialogException("Unexpected error during kdialog call")
 
-    stdout, stderr = stdout.decode(), stderr.decode() # type: ignore
+    stdout, stderr = stdout.decode(), stderr.decode()  # type: ignore
     if stderr.strip():
         sys.stderr.write(stderr)
 
     return stdout.strip()
 
 
-def open_file(title=strings.open_file, start_dir=None, filter=None):  # noqa: C901
-    """
+def open_file(  # noqa: C901
+    title: str = strings.open_file,
+    start_dir: Optional[str] = None,
+    filter: Optional[str | list[str | list[str]] | dict[str, str | list[str]]] = None,
+):
+    r"""
     Open a file selection dialog for selecting a file using KDialog.
 
     Args:
         title (str, optional): The title of the file selection dialog.
             Default is 'Choose a file'
         start_dir (str, optional): The starting directory for the dialog.
-        filter (str, list, dict, optional): The filter for file types to display.
+        filter (str, list, dict, optional): The filter for file types to display. It can be either:
+            - a single wildcard (e.g.: `"*.py"`, all files are displayed ending .py)
+            - a list of wildcards (e.g.: `["*.py", "*.md"]`, all files are displayed ending either .py or .md)
+            - a list of list optional one or more wildcards (e.g.: `[["*.py", "*.md"], ["*.txt"]]`,
+            user can switch between (.py, .md) and (.txt))
+            - a dictionary mapping descriptions to wildcards (e.g.: `{"PDF-Files": "*.pdf", "Python Project": ["\*.py", "*.md"]}`)
 
     Returns:
         str: The selected file's path.
@@ -78,7 +87,7 @@ def open_file(title=strings.open_file, start_dir=None, filter=None):  # noqa: C9
         result = open_file(title="Select a file", start_dir="/path/to/starting/directory", filter="*.txt")
 
     """
-    kdialog_kwargs = {'title': title}
+    kdialog_kwargs = {"title": title}
 
     if start_dir:
         kdialog_kwargs["start_dir"] = start_dir
@@ -93,9 +102,7 @@ def open_file(title=strings.open_file, start_dir=None, filter=None):  # noqa: C9
                 kdialog_kwargs["filter"] = " ".join(filter)
             elif isinstance(filter[0], list):
                 # Filter is a list of lists with wildcards.
-                kdialog_kwargs["filter"] = " | ".join(
-                    " ".join(f) for f in filter
-                )
+                kdialog_kwargs["filter"] = " | ".join(" ".join(f) for f in filter)
             else:
                 raise ValueError("Invalid filter")
         elif isinstance(filter, dict):
@@ -105,7 +112,7 @@ def open_file(title=strings.open_file, start_dir=None, filter=None):  # noqa: C9
                 if isinstance(value, str):
                     filters.append("{} ({})".format(key, value))
                 elif isinstance(value, list):
-                    filters.append("{} ({})".format(key, ' '.join(value)))
+                    filters.append("{} ({})".format(key, " ".join(value)))
                 else:
                     raise ValueError("Invalid filter")
 
@@ -115,13 +122,17 @@ def open_file(title=strings.open_file, start_dir=None, filter=None):  # noqa: C9
         else:
             raise ValueError("Invalid filter")
 
-    result = run_kdialog('getopenfilename', **kdialog_kwargs)
+    result = run_kdialog("getopenfilename", **kdialog_kwargs)
     if result:
         set_last_cwd(result)
     return result
 
 
-def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):  # noqa: C901
+def open_multiple(  # noqa: C901
+    title=strings.open_multiple,
+    start_dir=None,
+    filter=None,
+):
     """
     Open a file selection dialog for selecting multiple files using KDialog.
 
@@ -139,7 +150,7 @@ def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):  # 
         start_dir="/path/to/starting/directory", filter="*.txt")
 
     """
-    kdialog_kwargs = {'title': title}
+    kdialog_kwargs = {"title": title}
 
     if start_dir:
         kdialog_kwargs["start_dir"] = start_dir
@@ -152,11 +163,11 @@ def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):  # 
             if isinstance(filter[0], str):
                 # Filter is a list of wildcards.
                 kdialog_kwargs["filter"] = " ".join(filter)
-            elif isinstance(filter[0], list):
+            elif all(isinstance(i, list) for i in filter) and all(
+                all(isinstance(j, str) for j in i) for i in filter
+            ):
                 # Filter is a list of lists with wildcards.
-                kdialog_kwargs["filter"] = " | ".join(
-                    " ".join(f) for f in filter
-                )
+                kdialog_kwargs["filter"] = " | ".join(" ".join(f) for f in filter)
             else:
                 raise ValueError("Invalid filter")
         elif isinstance(filter, dict):
@@ -166,7 +177,7 @@ def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):  # 
                 if isinstance(value, str):
                     filters.append("{} ({})".format(key, value))
                 elif isinstance(value, list):
-                    filters.append("{} ({})".format(key, ' '.join(value)))
+                    filters.append("{} ({})".format(key, " ".join(value)))
                 else:
                     raise ValueError("Invalid filter")
 
@@ -176,8 +187,8 @@ def open_multiple(title=strings.open_multiple, start_dir=None, filter=None):  # 
         else:
             raise ValueError("Invalid filter")
 
-    result = run_kdialog('getopenfilename', 'multiple', **kdialog_kwargs)
-    result_list = list(map(str.strip, result.split(' ')))
+    result = run_kdialog("getopenfilename", "multiple", **kdialog_kwargs)
+    result_list = list(map(str.strip, result.split(" ")))
     if result_list:
         set_last_cwd(result_list[0])
         return result_list
@@ -200,8 +211,8 @@ def save_file(title=strings.save_file, start_dir=None):
         result = save_file(title="Save file", start_dir="/path/to/starting/directory")
 
     """
-    kdialog_args = ['getsavefilename']
-    kdialog_kwargs = {'title': title}
+    kdialog_args = ["getsavefilename"]
+    kdialog_kwargs = {"title": title}
 
     if start_dir:
         kdialog_kwargs["start_dir"] = start_dir
@@ -228,15 +239,15 @@ def choose_folder(title=strings.choose_folder, start_dir=None):
         result = choose_folder(title="Select folder", start_dir="/path/to/starting/directory")
 
     """
-    kdialog_kwargs = {'title': title}
+    kdialog_kwargs = {"title": title}
 
     if start_dir:
         kdialog_kwargs["start_dir"] = start_dir
 
-    result = run_kdialog('getexistingdirectory', **kdialog_kwargs)
+    result = run_kdialog("getexistingdirectory", **kdialog_kwargs)
     if result:
         set_last_cwd(result)
     return result
 
 
-__all__ = ['choose_folder', 'open_file', 'open_multiple', 'save_file']
+__all__ = ["choose_folder", "open_file", "open_multiple", "save_file"]
