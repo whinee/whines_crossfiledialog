@@ -1,11 +1,26 @@
 def filter_item_preprocessor(
     item: str | list[str] | dict[str, str] | dict[str, str | list[str]],
     item_seperator: str,
-    no_of_iterations: int = 0,
 ) -> tuple[str] | tuple[str, str]:
+    """
+    Processes filter objects that are not strings and turns them into a tuple of a
+    string or two strings which correspond to an unnamed filter and named filter,
+    which can then be processed by `filter_processor`.
 
-    if (no_of_iterations == 0):
-        raise ValueError("Invalid filter item")
+    Args:
+    - item (`str | list[str] | dict[str, str] | dict[str, str  |  list[str]]`): filter object
+    - item_seperator (`str`): The string that seperates items in a singular filter
+
+    Raises:
+    - `ValueError`: Raises an error if the filter item is invalid. This is raised when a dictionary is inside a dictionary, which should not be possible.
+    - `ValueError`: Raises an error if the filter item is invalid.
+
+    Returns:
+    `tuple[str] | tuple[str, str]`: A tuple of a string or two strings that corresponds to an unnamed filter and named filter, which can then be processed by `filter_processor`.
+
+    """
+
+    print(type(item),)
 
     if isinstance(item, str):
         return (item,)
@@ -16,9 +31,11 @@ def filter_item_preprocessor(
     if isinstance(item, dict):
         key = next(iter(item.keys()))
         value = next(iter(item.values()))
+        if isinstance(value, dict):
+            raise ValueError("Invalid filter item. Dictionary should not be placed inside a dictionary.")
         return (
             key,
-            filter_item_preprocessor(value, item_seperator, no_of_iterations + 1)[0],
+            filter_item_preprocessor(value, item_seperator)[0],
         )
 
     raise ValueError("Invalid filter item")
@@ -38,11 +55,15 @@ def filter_processor(  # noqa: C901
     - filter (`str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]]`):
         It can be either:
             - a single wildcard (e.g.: `"*.py"`, all files are displayed ending .py)
-            - a list of wildcards (e.g.: `["*.py", "*.md"]`, all files are displayed ending either .py or .md)
-            - a list of list optional one or more wildcards (e.g.: `[["*.py", "*.md"], ["*.txt"]]`,
-            user can switch between (.py, .md) and (.txt))
-            - a list of list or a list of str (e.g.: `[["*.py", "*.md"], "*.txt"]`, user can switch between (.py, .md) and .txt)
-            - a dictionary mapping descriptions to wildcards (e.g.: `{"PDF-Files": "*.pdf", "Python Project": ["\*.py", "*.md"]}`)
+            - a list of wildcards (e.g.: `["*.py", "*.md"]`, all files are displayed
+                ending either .py or .md)
+            - a list containing wildcards, lists of wildcards, and/or dictionaries of
+                named filters (e.g.: `[{"PDF-Files": "*.pdf"}, ["*.py", "*.md"], "*.txt"]`,
+                user can switch between PDF files, [.py, .md], and .txt). Note that when
+                one uses a dictionary inside, the first key and value is used as the
+                entry and the rest of the items in said dictionary are ignored.
+            - a dictionary mapping descriptions to wildcards
+                (e.g.: `{"PDF-Files": "*.pdf", "Python Project": ["\*.py", "*.md"]}`)
     - item_seperator (`str`): The string that seperates items in a singular filter
     - key_value_format (`str`): The format to which the named filters should be formatted
     - filter_seperator (`str`): The string that seperates filters
@@ -64,6 +85,7 @@ def filter_processor(  # noqa: C901
             filter1.append(filter_item_preprocessor(item, item_seperator))
     elif isinstance(filter, dict):
         for key, value in filter.items():
+            print(key, value)
             filter1.append((key, filter_item_preprocessor(value, item_seperator)[0]))
     else:
         raise ValueError("Invalid filter")

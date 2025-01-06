@@ -10,7 +10,7 @@ def test():
     ))
     print(crossfiledialog.open_file(
         start_dir="~",
-        filter=[["*.py", "*.txt"], ["*.png", "*.jpg"]],
+        filter=[{"PDF-Files": "*.pdf"}, ["*.py", "*.txt"], "*.jpg"],
     ))
     print(crossfiledialog.open_file(
         start_dir="~",

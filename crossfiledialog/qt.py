@@ -39,31 +39,27 @@ def set_last_cwd(cwd):
     last_cwd = os.path.dirname(cwd)
 
 
-def open_file(  # noqa: C901
+def open_file(
     title: str = strings.open_file,
     start_dir: Optional[str] = None,
     filter: Optional[str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]]] = None,
 ):
     r"""
-    Open a file selection dialog for selecting a file using GTK.
+    Open a file selection dialog for selecting a file using KDialog.
 
     Args:
-        title (str, optional): The title of the file selection dialog.
-            Default is 'Choose a file'
-        start_dir (str, optional): The starting directory for the dialog.
-        filter (str, list, dict, optional): The filter for file types to display. It can be either:
-            - a single wildcard (e.g.: `"*.py"`, all files are displayed ending .py)
-            - a list of wildcards (e.g.: `["*.py", "*.md"]`, all files are displayed ending either .py or .md)
-            - a list of list optional one or more wildcards (e.g.: `[["*.py", "*.md"], ["*.txt"]]`,
-            user can switch between (.py, .md) and (.txt))
-            - a list of list or a list of str (e.g.: `[["*.py", "*.md"], "*.txt"]`, user can switch between (.py, .md) and .txt)
-            - a dictionary mapping descriptions to wildcards (e.g.: `{"PDF-Files": "*.pdf", "Python Project": ["\*.py", "*.md"]}`)
+    - title (`str`, optional): The title of the file selection dialog.
+        Default is 'Choose a file'
+    - start_dir (`str`, optional): The starting directory for the dialog.
+    - filter (`Optional[str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]]]`, optional):
+        The filter for file types to display. For an example, head to documentation of
+        `crossfiledialog.utils.filter_processor`.
 
     Returns:
-        str: The selected file's path.
+    `str`: The selected file's path.
 
     Example:
-        result = open_file(title="Select a file", start_dir="/path/to/starting/directory", filter="*.txt")
+    result = open_file(title="Select a file", start_dir="/path/to/starting/directory", filter="*.txt")
 
     """
 

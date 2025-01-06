@@ -5,6 +5,7 @@ from typing import Optional
 
 from crossfiledialog import strings
 from crossfiledialog.exceptions import FileDialogException
+from crossfiledialog.utils import filter_processor
 
 
 class KDialogException(FileDialogException):
@@ -61,66 +62,37 @@ def run_kdialog(*args, **kwargs):  # noqa: C901
     return stdout.strip()
 
 
-def open_file(  # noqa: C901
+def open_file(
     title: str = strings.open_file,
     start_dir: Optional[str] = None,
-    filter: Optional[str | list[str | list[str]] | dict[str, str | list[str]]] = None,
+    filter: Optional[str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]]] = None,
 ):
     r"""
     Open a file selection dialog for selecting a file using KDialog.
 
     Args:
-        title (str, optional): The title of the file selection dialog.
-            Default is 'Choose a file'
-        start_dir (str, optional): The starting directory for the dialog.
-        filter (str, list, dict, optional): The filter for file types to display. It can be either:
-            - a single wildcard (e.g.: `"*.py"`, all files are displayed ending .py)
-            - a list of wildcards (e.g.: `["*.py", "*.md"]`, all files are displayed ending either .py or .md)
-            - a list of list optional one or more wildcards (e.g.: `[["*.py", "*.md"], ["*.txt"]]`,
-            user can switch between (.py, .md) and (.txt))
-            - a dictionary mapping descriptions to wildcards (e.g.: `{"PDF-Files": "*.pdf", "Python Project": ["\*.py", "*.md"]}`)
+    - title (`str`, optional): The title of the file selection dialog.
+        Default is 'Choose a file'
+    - start_dir (`str`, optional): The starting directory for the dialog.
+    - filter (`Optional[str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]]]`, optional):
+        The filter for file types to display. For an example, head to documentation of
+        `crossfiledialog.utils.filter_processor`.
 
     Returns:
-        str: The selected file's path.
+    `str`: The selected file's path.
 
     Example:
-        result = open_file(title="Select a file", start_dir="/path/to/starting/directory", filter="*.txt")
+    result = open_file(title="Select a file", start_dir="/path/to/starting/directory", filter="*.txt")
 
     """
+
     kdialog_kwargs = {"title": title}
 
     if start_dir:
         kdialog_kwargs["start_dir"] = start_dir
 
     if filter:
-        if isinstance(filter, str):
-            # Filter is a single wildcard.
-            kdialog_kwargs["filter"] = filter
-        elif isinstance(filter, list):
-            if isinstance(filter[0], str):
-                # Filter is a list of wildcards.
-                kdialog_kwargs["filter"] = " ".join(filter)
-            elif isinstance(filter[0], list):
-                # Filter is a list of lists with wildcards.
-                kdialog_kwargs["filter"] = " | ".join(" ".join(f) for f in filter)
-            else:
-                raise ValueError("Invalid filter")
-        elif isinstance(filter, dict):
-            # Filter is a dictionary mapping descriptions to wildcards or lists of wildcards.
-            filters = []
-            for key, value in filter.items():
-                if isinstance(value, str):
-                    filters.append("{} ({})".format(key, value))
-                elif isinstance(value, list):
-                    filters.append("{} ({})".format(key, " ".join(value)))
-                else:
-                    raise ValueError("Invalid filter")
-
-            kdialog_kwargs["filter"] = " | ".join(
-                filters,
-            )
-        else:
-            raise ValueError("Invalid filter")
+        kdialog_kwargs["filter"] = filter_processor(filter, " ", "{} ({})", " | ")
 
     result = run_kdialog("getopenfilename", **kdialog_kwargs)
     if result:
@@ -156,36 +128,7 @@ def open_multiple(  # noqa: C901
         kdialog_kwargs["start_dir"] = start_dir
 
     if filter:
-        if isinstance(filter, str):
-            # Filter is a single wildcard.
-            kdialog_kwargs["filter"] = filter
-        elif isinstance(filter, list):
-            if isinstance(filter[0], str):
-                # Filter is a list of wildcards.
-                kdialog_kwargs["filter"] = " ".join(filter)
-            elif all(isinstance(i, list) for i in filter) and all(
-                all(isinstance(j, str) for j in i) for i in filter
-            ):
-                # Filter is a list of lists with wildcards.
-                kdialog_kwargs["filter"] = " | ".join(" ".join(f) for f in filter)
-            else:
-                raise ValueError("Invalid filter")
-        elif isinstance(filter, dict):
-            # Filter is a dictionary mapping descriptions to wildcards or lists of wildcards.
-            filters = []
-            for key, value in filter.items():
-                if isinstance(value, str):
-                    filters.append("{} ({})".format(key, value))
-                elif isinstance(value, list):
-                    filters.append("{} ({})".format(key, " ".join(value)))
-                else:
-                    raise ValueError("Invalid filter")
-
-            kdialog_kwargs["filter"] = " | ".join(
-                filters,
-            )
-        else:
-            raise ValueError("Invalid filter")
+        kdialog_kwargs["filter"] = filter_processor(filter, " ", "{} ({})", " | ")
 
     result = run_kdialog("getopenfilename", "multiple", **kdialog_kwargs)
     result_list = list(map(str.strip, result.split(" ")))
