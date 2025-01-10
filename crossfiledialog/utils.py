@@ -20,8 +20,6 @@ def filter_item_preprocessor(
 
     """
 
-    print(type(item),)
-
     if isinstance(item, str):
         return (item,)
 
@@ -32,7 +30,9 @@ def filter_item_preprocessor(
         key = next(iter(item.keys()))
         value = next(iter(item.values()))
         if isinstance(value, dict):
-            raise ValueError("Invalid filter item. Dictionary should not be placed inside a dictionary.")
+            raise ValueError(
+                "Invalid filter item. Dictionary should not be placed inside a dictionary.",
+            )
         return (
             key,
             filter_item_preprocessor(value, item_seperator)[0],
@@ -85,7 +85,6 @@ def filter_processor(  # noqa: C901
             filter1.append(filter_item_preprocessor(item, item_seperator))
     elif isinstance(filter, dict):
         for key, value in filter.items():
-            print(key, value)
             filter1.append((key, filter_item_preprocessor(value, item_seperator)[0]))
     else:
         raise ValueError("Invalid filter")

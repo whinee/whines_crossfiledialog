@@ -65,7 +65,9 @@ def run_kdialog(*args, **kwargs):  # noqa: C901
 def open_file(
     title: str = strings.open_file,
     start_dir: Optional[str] = None,
-    filter: Optional[str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]]] = None,
+    filter: Optional[
+        str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]]
+    ] = None,
 ):
     r"""
     Open a file selection dialog for selecting a file using KDialog.
@@ -75,8 +77,8 @@ def open_file(
         Default is 'Choose a file'
     - start_dir (`str`, optional): The starting directory for the dialog.
     - filter (`Optional[str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]]]`, optional):
-        The filter for file types to display. For an example, head to documentation of
-        `crossfiledialog.utils.filter_processor`.
+        The filter for file types to display. For an example, head to documentation the
+        of `crossfiledialog.utils.filter_processor`.
 
     Returns:
     `str`: The selected file's path.
@@ -100,22 +102,26 @@ def open_file(
     return result
 
 
-def open_multiple(  # noqa: C901
-    title=strings.open_multiple,
-    start_dir=None,
-    filter=None,
-):
+def open_multiple(
+    title: str = strings.open_multiple,
+    start_dir: Optional[str] = None,
+    filter: Optional[
+        str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]]
+    ] = None,
+) -> list[str]:
     """
     Open a file selection dialog for selecting multiple files using KDialog.
 
     Args:
-        title (str, optional): The title of the file selection dialog.
-            Default is 'Choose one or more files'
-        start_dir (str, optional): The starting directory for the dialog.
-        filter (optional): The filter for file types to display.
+    - title (`str`, optional): The title of the file selection dialog.
+        Default is 'Choose one or more files'
+    - start_dir (`str`, optional): The starting directory for the dialog.
+    - filter (`Optional[str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]]]`, optional):
+        The filter for file types to display. For an example, head to documentation the
+        of `crossfiledialog.utils.filter_processor`.
 
     Returns:
-        list[str]: A list of selected file paths.
+    `list[str]`: A list of selected file paths.
 
     Example:
         result = open_multiple(title="Select multiple files",
@@ -130,8 +136,11 @@ def open_multiple(  # noqa: C901
     if filter:
         kdialog_kwargs["filter"] = filter_processor(filter, " ", "{} ({})", " | ")
 
-    result = run_kdialog("getopenfilename", "multiple", **kdialog_kwargs)
-    result_list = list(map(str.strip, result.split(" ")))
+    result = run_kdialog(
+        "getopenfilename", "multiple", "separate-output", **kdialog_kwargs,
+    )
+
+    result_list = list(map(str.strip, result.split("\n")))
     if result_list:
         set_last_cwd(result_list[0])
         return result_list
@@ -171,12 +180,12 @@ def choose_folder(title=strings.choose_folder, start_dir=None):
     Open a folder selection dialog using KDialog.
 
     Args:
-        title (str, optional): The title of the folder selection dialog.
-            Default is 'Choose a folder'
-        start_dir (str, optional): The starting directory for the dialog.
+    - title (`str`, optional): The title of the folder selection dialog.
+        Default is 'Choose a folder'
+    - start_dir (`str`, optional): The starting directory for the dialog.
 
     Returns:
-        str: The selected folder's path.
+    `str`: The selected folder's path.
 
     Example:
         result = choose_folder(title="Select folder", start_dir="/path/to/starting/directory")
