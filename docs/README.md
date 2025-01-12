@@ -25,8 +25,8 @@ Makes it easy to prompt the user with a native filepicker on all supported platf
 Currently supports:
 
 - GTK (via PyGObject or Zenity)
-- Qt5/6 (via pyqt5/pyqt6)
 - KDE (via KDialog)
+- Qt5/6 (via pyqt5/pyqt6)
 - Windows 2000 and newer (via PyWin32)
 
 Note:
@@ -36,12 +36,14 @@ Guys, I really don't know why, but why does QT and Kdialog have the same UI in m
 Basic API usage:
 
 ```python
-import crossfiledialog
+from crossfiledialog import file_dialog
 
-filename = crossfiledialog.open_file()
-multiple_filenames = crossfiledialog.open_multiple()
-save_filename = crossfiledialog.save_file()
-foldername = crossfiledialog.choose_folder()
+CrossFileDialog = file_dialog(["zenity"])
+
+filename = CrossFileDialog.open_file()
+multiple_filenames = CrossFileDialog.open_multiple()
+save_filename = CrossFileDialog.save_file()
+foldername = CrossFileDialog.choose_folder()
 ```
 
 ## Documentation

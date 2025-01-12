@@ -1,3 +1,38 @@
+from typing import Literal, Optional, overload
+
+from crossfiledialog import strings
+
+
+class BaseFileDialog:
+    @staticmethod
+    def open_file(
+        title: str = strings.open_file,
+        start_dir: Optional[str] = None,
+        filter: Optional[
+            str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]]
+        ] = None,
+    ) -> Optional[str]:
+        raise NotImplementedError
+
+    @staticmethod
+    def open_multiple(
+        title: str = strings.open_multiple,
+        start_dir: Optional[str] = None,
+        filter: Optional[
+            str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]]
+        ] = None,
+    ) -> Optional[list[str]]:
+        raise NotImplementedError
+
+    @staticmethod
+    def save_file(title=strings.save_file, start_dir=None) -> Optional[str]:
+        raise NotImplementedError
+
+    @staticmethod
+    def choose_folder(title=strings.choose_folder, start_dir=None) -> Optional[str]:
+        raise NotImplementedError
+
+
 def filter_item_preprocessor(
     item: str | list[str] | dict[str, str] | dict[str, str | list[str]],
     item_seperator: str,
@@ -8,15 +43,20 @@ def filter_item_preprocessor(
     which can then be processed by `filter_processor`.
 
     Args:
-    - item (`str | list[str] | dict[str, str] | dict[str, str  |  list[str]]`): filter object
+    - item (`str | list[str] | dict[str, str] | dict[str, str  |  list[str]]`):
+        filter object
     - item_seperator (`str`): The string that seperates items in a singular filter
 
     Raises:
-    - `ValueError`: Raises an error if the filter item is invalid. This is raised when a dictionary is inside a dictionary, which should not be possible.
+    - `ValueError`: Raises an error if the filter item is invalid.
+        This is raised when a dictionary is inside a dictionary, which should not be
+        possible.
     - `ValueError`: Raises an error if the filter item is invalid.
 
     Returns:
-    `tuple[str] | tuple[str, str]`: A tuple of a string or two strings that corresponds to an unnamed filter and named filter, which can then be processed by `filter_processor`.
+    `tuple[str] | tuple[str, str]`: A tuple of a string or two strings that corresponds
+        to an unnamed filter and named filter, which can then be processed by
+        `filter_processor`.
 
     """
 
@@ -41,12 +81,30 @@ def filter_item_preprocessor(
     raise ValueError("Invalid filter item")
 
 
-def filter_processor(  # noqa: C901
+@overload
+def filter_processor(
     filter: str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]],
     item_seperator: str,
     key_value_format: str,
     filter_seperator: str,
-) -> str:
+) -> str: ...
+
+
+@overload
+def filter_processor(
+    filter: str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]],
+    item_seperator: str,
+    key_value_format: str,
+    filter_seperator: Literal[None] = None,
+) -> list[str]: ...
+
+
+def filter_processor(  # noqa: C901
+    filter: str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]],
+    item_seperator: str,
+    key_value_format: str,
+    filter_seperator: Optional[str] = None,
+) -> str | list[str]:
     r"""
     Processes filter objects and turns them into a singular string that programs can
     understand.
@@ -66,7 +124,8 @@ def filter_processor(  # noqa: C901
                 (e.g.: `{"PDF-Files": "*.pdf", "Python Project": ["\*.py", "*.md"]}`)
     - item_seperator (`str`): The string that seperates items in a singular filter
     - key_value_format (`str`): The format to which the named filters should be formatted
-    - filter_seperator (`str`): The string that seperates filters
+    - filter_seperator (`Optional[str]`): The string that seperates filters.
+        When no value is provided, the filter is returned as a list of strings.
 
     Raises:
     - `ValueError`: Raises an error if the filter type is invalid
@@ -77,7 +136,10 @@ def filter_processor(  # noqa: C901
     """
 
     if isinstance(filter, str):
-        return filter
+        if filter_seperator is not None:
+            return filter
+
+        return [filter]
 
     filter1: list[tuple[str] | tuple[str, str]] = []
     if isinstance(filter, list):
@@ -97,4 +159,7 @@ def filter_processor(  # noqa: C901
             key, value = i
             output_filters.append(key_value_format.format(key, value))
 
-    return filter_seperator.join(output_filters)
+    if filter_seperator is not None:
+        return filter_seperator.join(output_filters)
+
+    return output_filters

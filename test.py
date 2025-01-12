@@ -1,28 +1,31 @@
 #!/usr/bin/env python3
 
-import crossfiledialog
+from crossfiledialog import file_dialog
 
+CrossFileDialog = file_dialog(["zenity"])
 
 def test():
-    # print(crossfiledialog.open_file(
+    # print(CrossFileDialog.open_file(
     #     start_dir="~",
     #     filter={"PDF-Files": "*.pdf", "Python Project": ["*.py", "*.md"]},
     # ))
-    # print(crossfiledialog.open_file(
+    # print(CrossFileDialog.open_file(
     #     start_dir="~",
     #     filter=[{"PDF-Files": "*.pdf"}, ["*.py", "*.txt"], "*.jpg"],
     # ))
-    # print(crossfiledialog.open_file(
+    # print(CrossFileDialog.open_file(
     #     start_dir="~",
     #     filter=["*.py", "*.md"],
     # ))
-    # print(crossfiledialog.open_file(
-    #     start_dir="~",
-    #     filter="*.py",
-    # ))
-    # print(crossfiledialog.open_multiple())
-    print(crossfiledialog.save_file())
-    # print(crossfiledialog.choose_folder())
+    print(CrossFileDialog.open_file(
+        start_dir="~",
+        filter="*.py",
+    ))
+    # print(CrossFileDialog.open_multiple())
+    # print(CrossFileDialog.save_file())
+    # print(CrossFileDialog.choose_folder())
+    # i = CrossFileDialog.open_file()
+    # print(i, type(i))
 
 
 if __name__ == "__main__":

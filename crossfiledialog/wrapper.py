@@ -1,38 +1,63 @@
 import os
 import sys
 from shutil import which
+from typing import Optional
 
 from crossfiledialog.exceptions import NoImplementationFoundException
 
-if sys.platform == "linux":
-    probably_kde = (
-        os.environ.get("DESKTOP_SESSION", "").lower() == "kde"
-        or os.environ.get("XDG_CURRENT_DESKTOP", "").lower() == "kde"
-    )
+# Global variable to store picker preferences
+default_picker_preferences = ["gtk", "zenity", "kdialog", "qt"]
 
-    kdialog_binary = which("kdialog")
-    zenity_binary = which("zenity")
 
-    not_imported = True
+def file_dialog(picker_preference: Optional[list[str]] = None):  # noqa: C901
+    if sys.platform == "linux":
+        probably_kde = (
+            os.environ.get("DESKTOP_SESSION", "").lower() == "kde"
+            or os.environ.get("XDG_CURRENT_DESKTOP", "").lower() == "kde"
+        )
 
-    # if all([kdialog_binary, (probably_kde or not zenity_binary), not_imported]):
-    #     from crossfiledialog.kdialog import choose_folder, open_file, open_multiple, save_file
-    #     not_imported = False
+        kdialog_binary = which("kdialog")
+        zenity_binary = which("zenity")
 
-    # if zenity_binary and not_imported:
-    #     from crossfiledialog.zenity import choose_folder, open_file, open_multiple, save_file
+        # Get preferences
+        preferred_picklers = (
+            picker_preference if picker_preference else default_picker_preferences
+        )
 
-    if not_imported:
-        try:
-            from crossfiledialog.qt import choose_folder, open_file, open_multiple, save_file  # noqa: F403
-        except ImportError:
-            raise NoImplementationFoundException from None
+        # Import pickers based on preferences
+        for picker in preferred_picklers:
+            if (
+                picker == "kdialog"
+                and kdialog_binary
+                and (probably_kde or not zenity_binary)
+            ):
+                print("kdialog")
+                from crossfiledialog.file_pickers.kdialog import (  # type: ignore[assignment]
+                    FileDialog,
+                )
 
-elif sys.platform == "win32":
-    from crossfiledialog.win32 import choose_folder, open_file, open_multiple, save_file  # noqa: F403
+                return FileDialog
+            if picker == "zenity" and zenity_binary:
+                print("zenity")
+                from crossfiledialog.file_pickers.zenity import (  # type: ignore[assignment]
+                    FileDialog,
+                )
 
-else:
+                return FileDialog
+            if picker == "qt":
+                print("qt")
+                from crossfiledialog.file_pickers.qt import (  # type: ignore[assignment]
+                    FileDialog,
+                )
+
+                return FileDialog
+
+        raise NoImplementationFoundException
+
+    if sys.platform == "win32":
+        print("win32")
+        from crossfiledialog.file_pickers.win32 import FileDialog
+
+        return FileDialog
+
     raise NoImplementationFoundException
-
-
-__all__ = ["choose_folder", "open_file", "open_multiple", "save_file"]  # noqa: F405
