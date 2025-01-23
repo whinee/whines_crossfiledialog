@@ -78,8 +78,7 @@ class FileDialog(BaseFileDialog):
         if filter:
             processed_filter = kwargs["filter"] = filter_processor(
                 filter,
-                " ",
-                "{} ({})",
+                (" ", "{} ({})"),
                 ";;",
             )
             kwargs["initialFilter"] = processed_filter[0]
@@ -114,8 +113,8 @@ class FileDialog(BaseFileDialog):
         `list[str]`: A list of selected file paths.
 
         Example:
-            result = open_multiple(title="Select multiple files",
-            start_dir="/path/to/starting/directory", filter="*.txt")
+        result = open_multiple(title="Select multiple files",
+        start_dir="/path/to/starting/directory", filter="*.txt")
 
         """
 
@@ -130,8 +129,7 @@ class FileDialog(BaseFileDialog):
         if filter:
             processed_filter = kwargs["filter"] = filter_processor(
                 filter,
-                " ",
-                "{} ({})",
+                (" ", "{} ({})"),
                 ";;",
             )
             kwargs["initialFilter"] = processed_filter[0]
@@ -157,7 +155,7 @@ class FileDialog(BaseFileDialog):
             `Optional[str]`: The selected file's path for saving.
 
         Example:
-            result = save_file(title="Save file", start_dir="/path/to/starting/directory")
+        result = save_file(title="Save file", start_dir="/path/to/starting/directory")
 
         """
 
@@ -193,7 +191,7 @@ class FileDialog(BaseFileDialog):
         `Optional[str]`: The selected folder's path.
 
         Example:
-            result = choose_folder(title="Select folder", start_dir="/path/to/starting/directory")
+        result = choose_folder(title="Select folder", start_dir="/path/to/starting/directory")
 
         """
 

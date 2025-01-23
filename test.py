@@ -2,7 +2,7 @@
 
 from crossfiledialog import file_dialog
 
-CrossFileDialog = file_dialog(["zenity"])
+CrossFileDialog = file_dialog(["pygobject"])
 
 def test():
     # print(CrossFileDialog.open_file(
@@ -17,15 +17,13 @@ def test():
     #     start_dir="~",
     #     filter=["*.py", "*.md"],
     # ))
-    print(CrossFileDialog.open_file(
-        start_dir="~",
-        filter="*.py",
-    ))
+    # print(CrossFileDialog.open_file(
+    #     start_dir="~",
+    #     filter="*.py",
+    # ))
     # print(CrossFileDialog.open_multiple())
     # print(CrossFileDialog.save_file())
-    # print(CrossFileDialog.choose_folder())
-    # i = CrossFileDialog.open_file()
-    # print(i, type(i))
+    print(CrossFileDialog.choose_folder())
 
 
 if __name__ == "__main__":

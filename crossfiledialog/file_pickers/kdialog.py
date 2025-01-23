@@ -96,7 +96,7 @@ class FileDialog(BaseFileDialog):
             kdialog_kwargs["start_dir"] = start_dir
 
         if filter:
-            kdialog_kwargs["filter"] = filter_processor(filter, " ", "{} ({})", " | ")
+            kdialog_kwargs["filter"] = filter_processor(filter, (" ", "{} ({})"), " | ")
 
         result = run_kdialog("getopenfilename", **kdialog_kwargs)
         if result:
@@ -126,8 +126,8 @@ class FileDialog(BaseFileDialog):
         `list[str]`: A list of selected file paths.
 
         Example:
-            result = open_multiple(title="Select multiple files",
-            start_dir="/path/to/starting/directory", filter="*.txt")
+        result = open_multiple(title="Select multiple files",
+        start_dir="/path/to/starting/directory", filter="*.txt")
 
         """
         kdialog_kwargs = {"title": title}
@@ -136,7 +136,7 @@ class FileDialog(BaseFileDialog):
             kdialog_kwargs["start_dir"] = start_dir
 
         if filter:
-            kdialog_kwargs["filter"] = filter_processor(filter, " ", "{} ({})", " | ")
+            kdialog_kwargs["filter"] = filter_processor(filter, (" ", "{} ({})"), " | ")
 
         result = run_kdialog(
             "getopenfilename",
@@ -152,7 +152,10 @@ class FileDialog(BaseFileDialog):
         return []
 
     @staticmethod
-    def save_file(title=strings.save_file, start_dir=None) -> Optional[str]:
+    def save_file(
+        title: str = strings.save_file,
+        start_dir: Optional[str] = None,
+    ) -> Optional[str]:
         """
         Open a save file dialog using KDialog.
 
@@ -180,7 +183,10 @@ class FileDialog(BaseFileDialog):
         return result
 
     @staticmethod
-    def choose_folder(title=strings.choose_folder, start_dir=None) -> Optional[str]:
+    def choose_folder(
+        title: str = strings.choose_folder,
+        start_dir: Optional[str] = None,
+    ) -> Optional[str]:
         """
         Open a folder selection dialog using KDialog.
 
@@ -193,7 +199,7 @@ class FileDialog(BaseFileDialog):
         `str`: The selected folder's path.
 
         Example:
-            result = choose_folder(title="Select folder", start_dir="/path/to/starting/directory")
+        result = choose_folder(title="Select folder", start_dir="/path/to/starting/directory")
 
         """
         kdialog_kwargs = {"title": title}

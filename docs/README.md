@@ -24,7 +24,7 @@ Makes it easy to prompt the user with a native filepicker on all supported platf
 
 Currently supports:
 
-- GTK (via PyGObject or Zenity)
+- GTK (via PyGObject, Zenity)
 - KDE (via KDialog)
 - Qt5/6 (via pyqt5/pyqt6)
 - Windows 2000 and newer (via PyWin32)
@@ -32,6 +32,8 @@ Currently supports:
 Note:
 
 Guys, I really don't know why, but why does QT and Kdialog have the same UI in my computer? Can someone who knows open an issue and explain it to me? Thank you!
+
+If you know how to add the fil picker for MacOS, please consider doing so and make a pull request for it.
 
 Basic API usage:
 
@@ -51,25 +53,22 @@ foldername = CrossFileDialog.choose_folder()
 ```python
 crossfiledialog.open_file(title, start_dir, filter) -> str
 ```
+
 Open a file selection dialog for selecting a file.
 
-Parameters:
- - title (str, optional) — The title of the file selection dialog. Default is 'Choose a file'
- - start_dir (str, optional) — The starting directory for the dialog.
- - filter (str, list, dict, optional) — The filter for file types to display. It can be either:
-    - a single wildcard (e.g.: `"*.py"`, all files are displayed ending .py)
-    - a list of wildcards (e.g.: `["*.py", "*.md"]`, all files are displayed
-        ending either .py or .md)
-    - a list containing wildcards, lists of wildcards, and/or dictionaries of
-        named filters (e.g.: `[{"PDF-Files": "*.pdf"}, ["*.py", "*.md"], "*.txt"]`,
-        user can switch between PDF files, [.py, .md], and .txt). Note that when
-        one uses a dictionary inside, the first key and value is used as the
-        entry and the rest of the items in said dictionary are ignored.
-    - a dictionary mapping descriptions to wildcards
-        (e.g.: `{"PDF-Files": "*.pdf", "Python Project": ["\*.py", "*.md"]}`)
+Args:
+- title (`str`, optional): The title of the file selection dialog.
+    Default is 'Choose a file'
+- start_dir (`str`, optional): The starting directory for the dialog.
+- filter (`str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]]`, optional):
+    The filter for file types to display. For an example, head to documentation the
+    of `crossfiledialog.utils.filter_processor`.
 
 Returns:
- - str: The selected file's path.
+`Optional[str]`: The selected file's path.
+
+Example:
+result = open_file(title="Select a file", start_dir="/path/to/starting/directory", filter="*.txt")
 
 ---
 
