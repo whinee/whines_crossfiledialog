@@ -5,10 +5,10 @@ from whines_crossfiledialog import file_dialog
 CrossFileDialog = file_dialog(["pygobject"])
 
 def test():
-    # print(CrossFileDialog.open_file(
-    #     start_dir="~",
-    #     filter={"PDF-Files": "*.pdf", "Python Project": ["*.py", "*.md"]},
-    # ))
+    print(CrossFileDialog.open_file(
+        start_dir="~",
+        filter={"PDF-Files": "*.pdf", "Python Project": ["*.py", "*.md"]},
+    ))
     # print(CrossFileDialog.open_file(
     #     start_dir="~",
     #     filter=[{"PDF-Files": "*.pdf"}, ["*.py", "*.txt"], "*.jpg"],
@@ -23,7 +23,7 @@ def test():
     # ))
     # print(CrossFileDialog.open_multiple())
     # print(CrossFileDialog.save_file())
-    print(CrossFileDialog.choose_folder())
+    # print(CrossFileDialog.choose_folder())
 
 
 if __name__ == "__main__":
