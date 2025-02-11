@@ -33,7 +33,9 @@ Note:
 
 Guys, I really don't know why, but why does QT and Kdialog have the same UI in my computer? Can someone who knows open an issue and explain it to me? Thank you!
 
-If you know how to add the fil picker for MacOS, please consider doing so and make a pull request for it.
+Edit: The explanation has been provided in [this issue comment](https://github.com/maikelwever/crossfiledialog/issues/8#issuecomment-2640213041).
+
+If you know how to add the file picker for MacOS, please consider doing so and make a pull request for it.
 
 Basic API usage:
 
@@ -158,6 +160,24 @@ python -m black -q school
 python -m ruff check crossfiledialog --fix
 ```
 
+## Attribution
+
+Thank you so much to [Maikel Wever](https://github.com/maikelwever) and [3ricsonn](https://github.com/3ricsonn) for allowing the upstream Github repository to be relicensed to LGPL 3.0 so that I can use this library in my own proprietary projects.
+
+My deepest gratitude also goes to [Benjamin Auquite](https://github.com/th3w1zard1) for letting me use snippets of their code [from a pull request](https://github.com/beeware/toga/pull/2786) they made to the [Toga](https://github.com/beeware/toga) repository, and to [Russell Keith-Magee](https://github.com/freakboy3742) (the owner of said repository) and [Malcolm Smith](https://github.com/mhsmith) for the advice regarding using BSD 3-Clause licensed code to an LGPL licensed codebase.
+
+Thank you so much!
+
 ## License
 
-Licensed under the GNU GPL 3.0
+This software is licensed under the GNU LGPL 3.0.
+
+Copyright (c) 2020-2025 [Maikel Wever](https://github.com/maikelwever)  
+Copyright (c) 2024-2025 [whinee](https://github.com/whinee)  
+
+Portions of this codebase, specifically [`crossfiledialog/file_pickers/win32.py`](crossfiledialog/file_pickers/win32.py), are derived from [Toga](https://github.com/beeware/toga), which is licensed under the BSD 3-Clause License.
+
+Copyright (c) 2014 Russell Keith-Magee.  
+
+See [LICENSE.md](docs/LICENSE.md) for full details.
+

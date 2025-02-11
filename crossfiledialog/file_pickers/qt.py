@@ -134,6 +134,7 @@ class FileDialog(BaseFileDialog):
             )
             kwargs["initialFilter"] = processed_filter[0]
 
+        file_paths: list[str]
         file_paths, _ = QFileDialog.getOpenFileNames(
             None,
             caption=title,
