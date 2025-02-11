@@ -1,0 +1,33 @@
+version: 38
+jobs:
+- name: Push to Github
+  steps:
+  - !PushRepository
+    name: push
+    remoteUrl: https://github.com/whinee/whines_crossfiledialog
+    passwordSecret: access-token
+    force: false
+    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
+  triggers:
+  - !BranchUpdateTrigger
+    projects: P01.41.14-whines-crossfiledialog
+  - !TagCreateTrigger
+    projects: P01.41.14-whines-crossfiledialog
+  retryCondition: never
+  maxRetries: 3
+  retryDelay: 30
+  timeout: 14400
+- name: Pull from Github
+  steps:
+  - !PullRepository
+    name: pull
+    remoteUrl: https://github.com/whinee/whines_crossfiledialog
+    passwordSecret: access-token
+    refs: refs/heads/* refs/tags/*
+    withLfs: false
+    force: false
+    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
+  retryCondition: never
+  maxRetries: 3
+  retryDelay: 30
+  timeout: 14400
