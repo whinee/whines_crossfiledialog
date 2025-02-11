@@ -1,6 +1,6 @@
 import sys
 from shutil import which
-from typing import Optional, Type
+from typing import Optional
 
 from whines_crossfiledialog.exceptions import NoImplementationFoundException
 from whines_crossfiledialog.utils import BaseFileDialog
@@ -9,7 +9,7 @@ from whines_crossfiledialog.utils import BaseFileDialog
 default_picker_preferences = ["kdialog", "pygobject", "qt", "zenity"]
 
 
-def file_dialog(picker_preference: Optional[list[str]] = None) -> Type[BaseFileDialog]:  # noqa: C901
+def file_dialog(picker_preference: Optional[list[str]] = None) -> type[BaseFileDialog]:  # noqa: C901
     """
     From a list of (optional) file picker preferences, return the first available implementation. 
 
@@ -22,6 +22,7 @@ def file_dialog(picker_preference: Optional[list[str]] = None) -> Type[BaseFileD
 
     Returns:
     `BaseFileDialog`: File picker class.
+
     """
     if sys.platform == "linux":
         kdialog_binary = which("kdialog")

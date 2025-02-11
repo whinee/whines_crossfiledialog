@@ -1,5 +1,6 @@
 """
 Part of this codebase contains code from toga (https://github.com/beeware/toga).
+
 Hereunder is the license for toga:
 
 --- Start of Toga License ---
@@ -64,9 +65,9 @@ from whines_crossfiledialog.exceptions import (
 
 try:
     # --- Start of Toga code snippet ---
-    from _ctypes import COMError
+    from _ctypes import COMError  # type: ignore
     from ctypes import (
-        HRESULT,
+        HRESULT,  # type: ignore
         POINTER,
         Structure,
         byref,
@@ -75,16 +76,18 @@ try:
         c_ulong,
         c_void_p,
         c_wchar_p,
-        windll,
+        windll,  # type: ignore
     )
     from ctypes.wintypes import DWORD, HWND, LPCWSTR, LPWSTR
 
     import comtypes
     import comtypes.client
+
     # --- End of Toga code snippet ---
     import pywintypes  # type: ignore
     import win32con  # type: ignore
     import win32gui  # type: ignore
+
     # --- Start of Toga code snippet ---
     from comtypes import COMMETHOD, GUID
     from comtypes.hresult import S_OK
