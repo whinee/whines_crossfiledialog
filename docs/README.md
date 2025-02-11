@@ -152,24 +152,10 @@ Returns:
 
 ## Getting Started
 
-Install the following dependencies
-
-- Python 3.12
-- [just](https://just.systems/)
-
-In Linux, run the following command:
+Follow [this tutorial](docs/getting_started.md) to install development prerequsites and get started.
 
 ```sh
 just bootstrap
-```
-
-or:
-
-```sh
-python3.12 -m venv --system-site-packages .venv
-source .venv/bin/activate
-rm -rf poetry.lock
-poetry install --no-root --with dev
 ```
 
 ## Linting

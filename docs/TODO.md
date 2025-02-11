@@ -4,6 +4,7 @@
 
 - [ ] Pick multiple folders
 - [ ] Add MacOS file picker
+- [ ] Migrate totally from pywin32 to comtypes
 
 ## Done
 

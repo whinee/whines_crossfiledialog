@@ -85,8 +85,10 @@ try:
     import pywintypes  # type: ignore
     import win32con  # type: ignore
     import win32gui  # type: ignore
+    # --- Start of Toga code snippet ---
     from comtypes import COMMETHOD, GUID
     from comtypes.hresult import S_OK
+    # --- End of Toga code snippet ---
 except ImportError:
     raise NoImplementationFoundException(
         "Running 'filedialog' on Windows requires the 'pywin32' package.",
