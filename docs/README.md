@@ -152,7 +152,7 @@ Returns:
 
 ## Getting Started
 
-Follow [this tutorial](docs/getting-started.md) to install development prerequsites and get started.
+Follow [this tutorial](./getting-started.md) to install development prerequsites and get started.
 
 ## Linting
 
@@ -189,5 +189,5 @@ Portions of this codebase, specifically [`whines_crossfiledialog/file_pickers/wi
 
 Copyright (c) 2014 Russell Keith-Magee.  
 
-See [LICENSE.md](docs/LICENSE.md) for full details.
+See [LICENSE.md](./LICENSE.md) for full details.
 

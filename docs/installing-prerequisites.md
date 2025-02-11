@@ -32,15 +32,17 @@
 
 3. A window with a title `Run` should appear. Focus to the said window in the `Open:` text field by hovering the mouse towards the said text field and left-clicking the mouse and type `powershell` as shown below:
 
-    ![](/docs/assets/images/run_box_ps.png)
+    ![](assets/images/windows/run_box_ps.png)
 
 4. Press `Ctrl` + `Shift` + `Enter` (Press `Ctrl`, `Shift`, and `Enter` keys simultaneously).
 
 5. A window with a title `User Account Control` should appear as shown below:
 
-    ![](/docs/assets/images/UAC_ps.png)
+    ![](assets/images/windows/UAC_ps.png)
 
-6. Focus to the said window and press the `Yes` button by hovering the mouse towards the said button and left-clicking the mouse. A window named `Administrator: Windows Powershell` should pop-up.
+6. Focus to the said window and press the `Yes` button by hovering the mouse towards the said button and left-clicking the mouse. A window named `Administrator: Windows Powershell` should pop-up, as seen in the following:
+
+	![](assets/images/windows/pwsh-_admin.png)
 
 7. Focus to the window named `Administrator: Windows Powershell` window by hovering the mouse towards the said window and left-clicking the mouse. Then, press `Ctrl` + `V` (Press `Ctrl` and `V` keys simultaneously), and `Enter` afterwards.
 
@@ -74,17 +76,17 @@
 
 14. You should be redirected to "`Apps & Features`" as shown below:
 
-    ![4](/docs/assets/images/prerequisites/python/windows/4.png)
+    ![](/docs/assets/images/prerequisites/python/windows/4.png)
     
     Below the subtitle "`Apps & Features`", press the hyperlink"`App execution aliases`".
 
 15. You should be redirected to "`App execution aliases`" as shown below:
 
-    ![5](/docs/assets/images/prerequisites/python/windows/5.png)
+	![](/docs/assets/images/prerequisites/python/windows/5.png)
 
     Toggle the "`App installer`" for both "`python.exe`" and "`python3.exe`". Exit the settings app.
 
-[<- Go back to Getting Started](./getting-started.md#windows)
+[<- Go back to Getting Started](../../../getting-started.md#windows)
 
 <h2 id="linux"><a href="#linux">Linux</a></h2>
 
@@ -97,7 +99,7 @@
     sudo apt install -y git just python3 python3-pip
     ```
 
-[<- Go back to Getting Started](./getting-started.md#linux)
+[<- Go back to Getting Started](../../../getting-started.md#linux)
 
 <h3 id="linux-fedora"><a href="#linux-fedora">Fedora</a></h3>
 
@@ -107,7 +109,7 @@
     sudo dnf install -y git just python3.12
     ```
 
-[<- Go back to Getting Started](./getting-started.md#linux)
+[<- Go back to Getting Started](../../../getting-started.md#linux)
 
 <h3 id="linux-arch"><a href="#linux-arch">Arch</a></h3>
 
@@ -117,4 +119,4 @@
     sudo pacman -Syyu --noconfirm git just python312
     ```
 
-[<- Go back to Getting Started](./getting-started.md#linux)
+[<- Go back to Getting Started](../../../getting-started.md#linux)

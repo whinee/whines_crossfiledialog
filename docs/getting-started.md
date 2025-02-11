@@ -13,7 +13,7 @@
 
 <h2 id="windows"><a href="#windows">Windows</a></h2>
 
-1. Follow the instructions at [this link](./installing-prerequisites.md#windows) for installing the prerequisites.
+1. Follow the instructions at [this link](installing-prerequisites.md#windows) for installing the prerequisites.
 
 2. Replace the "username" and "email" in the following text with your respective username and email you used for registration in Github:
 
@@ -28,9 +28,11 @@
 
 3. A window with a title `Run` should appear. Focus to the said window in the `Open:` text field by hovering the mouse towards the said text field and left-clicking the mouse and type `powershell` as shown below:
 
-    ![](/docs/assets/images/run_box_ps.png)
+    ![](assets/images/windows/run_box_ps.png)
 
-4. Press `Enter`. A window named `Windows Powershell` should pop-up.
+4. Press `Enter`. A window named `Windows Powershell` should pop-up, as seen in the following:
+
+	![](assets/images/windows/pwsh.png)
 
 5. Focus to the window named `Windows Powershell` window by hovering the mouse towards the said window and left-clicking the mouse. Then, press `Ctrl` + `V` (Press `Ctrl` and `V` keys simultaneously), and `Enter` afterwards.
 
@@ -38,19 +40,31 @@
 
 6. Follow [this tutorial](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository?platform=windows&tool=webui) from Github to clone this repository.
 
-5. Copy the following text:
+7. Open the folder where you have cloned the repository in the file explorer. You should see the following:
+
+	 ![](/docs/assets/images/windows/cloned_repo_file_explorer.png)
+
+8. At the upper-right corner of said file explorer window, press the `File` button. You should see the following:
+
+	![](assets/images/windows/file_explorer_file_menu.png)
+
+9. Press the `Open Windows Powershell` button. A window named `Windows Powershell` should pop-up, as seen in the following:
+
+	![](assets/images/windows/cloned_repo_pwsh.png)
+
+10. Copy the following text:
 
 ```sh
 just bootstrap
 ```
 
-    Then, repeat step 2-5.
+    Then, repeat step 5.
 
 Now, you are good to go. Great job!
 
 <h2 id="linux"><a href="#linux">Linux</a></h2>
 
-1. Follow the instructions at [this link](./installing-prerequisites.md#linux) for installing the prerequisites. Select your desired Linux distribution.
+1. Follow the instructions at [this link](installing-prerequisites.md#linux) for installing the prerequisites. Select your desired Linux distribution.
 
 2. Replace the "username" and "email" in the following text with your respective username and email you used for registration in Github:
 
@@ -63,7 +77,7 @@ Now, you are good to go. Great job!
 
 3. Open your preferred terminal, then press `Ctrl` + `Shift` + `V` (Press `Ctrl`, `Shift`, and `V` keys simultaneously) to paste the command above.
 
-4. Follow [this tutorial](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository?platform=windows&tool=webui) from Github to clone this repository.
+4. Follow [this tutorial](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository?platform=linux&tool=webui) from Github to clone this repository.
 
 5. Open your preferred terminal in the directory in which you cloned this repository, and then run the following command to bootstrap the project:
 

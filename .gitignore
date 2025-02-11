@@ -1,6 +1,7 @@
 # User-defined Ignored Folders
 .history/
 .idea/
+.obsidian/
 .venv/
 
 # User-defined Ignored Files
