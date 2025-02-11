@@ -185,7 +185,7 @@ This software is licensed under the GNU LGPL 3.0.
 Copyright (c) 2020-2025 [Maikel Wever](https://github.com/maikelwever)  
 Copyright (c) 2024-2025 [whinee](https://github.com/whinee)  
 
-Portions of this codebase, specifically [`whines_crossfiledialog/file_pickers/win32.py`](whines_crossfiledialog/file_pickers/win32.py), are derived from [Toga](https://github.com/beeware/toga), which is licensed under the BSD 3-Clause License.
+Portions of this codebase, specifically [`whines_crossfiledialog/file_pickers/win32.py`](../whines_crossfiledialog/file_pickers/win32.py), are derived from [Toga](https://github.com/beeware/toga), which is licensed under the BSD 3-Clause License.
 
 Copyright (c) 2014 Russell Keith-Magee.  
 
