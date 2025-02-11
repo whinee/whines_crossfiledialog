@@ -53,7 +53,25 @@ foldername = CrossFileDialog.choose_folder()
 ## Documentation
 
 ```python
-crossfiledialog.open_file(title, start_dir, filter) -> str
+file_dialog(picker_preference: Optional[list[str]] = None) -> BaseFileDialog
+```
+
+From a list of (optional) file picker preferences, return the first available implementation. 
+
+Args:
+- picker_preference (`Optional[list[str]]`, optional): Order of precedence for picking the file picker implementations. Defaults to `None`.
+
+Raises:
+- `NoImplementationFoundException`: Raise when no implementation is found from the list of preferences
+- `NoImplementationFoundException`: Raise when no implementation is found for the current platform
+
+Returns:
+`BaseFileDialog`: File picker class.
+
+---
+
+```python
+CrossFileDialog.open_file(title, start_dir, filter) -> str
 ```
 
 Open a file selection dialog for selecting a file.
@@ -75,7 +93,7 @@ result = open_file(title="Select a file", start_dir="/path/to/starting/directory
 ---
 
 ```python
-crossfiledialog.open_multiple(title, start_dir, filter) -> list[str]
+CrossFileDialog.open_multiple(title, start_dir, filter) -> list[str]
 ```
 
 Open a file selection dialog for selecting multiple files.
@@ -96,7 +114,7 @@ Returns:
 ---
 
 ```python
-crossfiledialog.save_file(title, start_dir) -> str
+CrossFileDialog.save_file(title, start_dir) -> str
 ```
 Open a save file dialog.
 
@@ -110,7 +128,7 @@ Returns:
 ---
 
 ```python
-crossfiledialog.save_file(title, start_dir) -> str
+CrossFileDialog.save_file(title, start_dir) -> str
 ```
 
 Open a folder selection dialog.

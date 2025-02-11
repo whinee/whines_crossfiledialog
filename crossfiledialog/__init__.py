@@ -3,12 +3,26 @@ from shutil import which
 from typing import Optional
 
 from crossfiledialog.exceptions import NoImplementationFoundException
+from crossfiledialog.utils import BaseFileDialog
 
 # Global variable to store picker preferences
 default_picker_preferences = ["kdialog", "pygobject", "qt", "zenity"]
 
 
-def file_dialog(picker_preference: Optional[list[str]] = None):  # noqa: C901
+def file_dialog(picker_preference: Optional[list[str]] = None) -> BaseFileDialog:  # noqa: C901
+    """
+    From a list of (optional) file picker preferences, return the first available implementation. 
+
+    Args:
+    - picker_preference (`Optional[list[str]]`, optional): Order of precedence for picking the file picker implementations. Defaults to `None`.
+
+    Raises:
+    - `NoImplementationFoundException`: Raise when no implementation is found from the list of preferences
+    - `NoImplementationFoundException`: Raise when no implementation is found for the current platform
+
+    Returns:
+    `BaseFileDialog`: File picker class.
+    """
     if sys.platform == "linux":
         kdialog_binary = which("kdialog")
         zenity_binary = which("zenity")

@@ -2,7 +2,9 @@
 
 <!-- All tasks are completed! -->
 
+- [ ] Pick multiple folders
 - [ ] Package code for PyPi release
+- [ ] Add MacOS file picker
 
 ## Done
 
