@@ -29,7 +29,7 @@ Currently supports:
 - Qt5/6 (via pyqt5/pyqt6)
 - Windows 2000 and newer (via PyWin32)
 
-Note:
+## Note
 
 Guys, I really don't know why, but why does QT and Kdialog have the same UI in my computer? Can someone who knows open an issue and explain it to me? Thank you!
 
@@ -37,7 +37,7 @@ Edit: The explanation has been provided in [this issue comment](https://github.c
 
 If you know how to add the file picker for MacOS, please consider doing so and make a pull request for it.
 
-Basic API usage:
+## Basic API usage
 
 ```python
 from crossfiledialog import file_dialog
