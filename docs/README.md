@@ -152,11 +152,7 @@ Returns:
 
 ## Getting Started
 
-Follow [this tutorial](docs/getting_started.md) to install development prerequsites and get started.
-
-```sh
-just bootstrap
-```
+Follow [this tutorial](docs/getting-started.md) to install development prerequsites and get started.
 
 ## Linting
 

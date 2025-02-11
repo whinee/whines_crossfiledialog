@@ -18,7 +18,7 @@
     </ul>
 </div>
 
-<h2 id="installing-prerequisites-windows"><a href="#windows">Windows</a></h2>
+<h2 id="windows"><a href="#windows">Windows</a></h2>
 
 1. Copy the following text:
 
@@ -84,9 +84,11 @@
 
     Toggle the "`App installer`" for both "`python.exe`" and "`python3.exe`". Exit the settings app.
 
-<h2 id="installing-prerequisites-linux"><a href="#linux">Linux</a></h2>
+[<- Go back to Getting Started](./getting-started.md#windows)
 
-<h3 id="installing-prerequisites-linux-debian"><a href="#linux-debian">Debian</a></h3>
+<h2 id="linux"><a href="#linux">Linux</a></h2>
+
+<h3 id="linux-debian"><a href="#linux-debian">Debian</a></h3>
 
 1. Open your preferred terminal and run the following command to install the prerequisites:
 
@@ -95,7 +97,9 @@
     sudo apt install -y git just python3 python3-pip
     ```
 
-<h3 id="installing-prerequisites-linux-fedora"><a href="#linux-fedora">Fedora</a></h3>
+[<- Go back to Getting Started](./getting-started.md#linux)
+
+<h3 id="linux-fedora"><a href="#linux-fedora">Fedora</a></h3>
 
 1. Open your preferred terminal and run the following command to install the prerequisites:
 
@@ -103,10 +107,14 @@
     sudo dnf install -y git just python3.12
     ```
 
-<h3 id="installing-prerequisites-linux-arch"><a href="#linux-arch">Arch</a></h3>
+[<- Go back to Getting Started](./getting-started.md#linux)
+
+<h3 id="linux-arch"><a href="#linux-arch">Arch</a></h3>
 
 1. Open your preferred terminal and run the following command to install the prerequisites:
 
     ```sh
     sudo pacman -Syyu --noconfirm git just python312
     ```
+
+[<- Go back to Getting Started](./getting-started.md#linux)
