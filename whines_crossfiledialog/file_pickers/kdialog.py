@@ -3,12 +3,12 @@ import sys
 from subprocess import PIPE, Popen
 from typing import Optional
 
-from crossfiledialog import strings
-from crossfiledialog.exceptions import FileDialogException
-from crossfiledialog.utils import BaseFileDialog, filter_processor
+from whines_crossfiledialog import strings
+from whines_crossfiledialog.exceptions import FileDialogException
+from whines_crossfiledialog.utils import BaseFileDialog, filter_processor
 
 
-class ZenityException(FileDialogException):
+class KDialogException(FileDialogException):
     pass
 
 
@@ -30,10 +30,19 @@ def set_last_cwd(cwd):
     last_cwd = os.path.dirname(cwd)
 
 
-def run_zenity(*args, **kwargs) -> str:
-    cmdlist = ["zenity"]
+def run_kdialog(*args, **kwargs) -> str:  # noqa: C901
+    cmdlist = ["kdialog"]
     cmdlist.extend("--{}".format(arg) for arg in args)
-    cmdlist.extend("--{}={}".format(k, v) for k, v in kwargs.items())
+
+    if "start_dir" in kwargs:
+        cmdlist.append(kwargs.pop("start_dir"))
+
+    if "filter" in kwargs:
+        cmdlist.append(kwargs.pop("filter"))
+
+    for k, v in kwargs.items():
+        cmdlist.append("--{}".format(k))
+        cmdlist.append(v)
 
     extra_kwargs = {}
     preferred_cwd = get_preferred_cwd()
@@ -44,10 +53,9 @@ def run_zenity(*args, **kwargs) -> str:
     stdout, stderr = process.communicate()
 
     if process.returncode == -1:
-        raise ZenityException("Unexpected error during zenity call")
+        raise KDialogException("Unexpected error during kdialog call")
 
     stdout, stderr = stdout.decode(), stderr.decode()  # type: ignore
-
     if stderr.strip():
         sys.stderr.write(stderr)
 
@@ -56,15 +64,15 @@ def run_zenity(*args, **kwargs) -> str:
 
 class FileDialog(BaseFileDialog):
     @staticmethod
-    def open_file(  # noqa: C901
+    def open_file(
         title: str = strings.open_file,
         start_dir: Optional[str] = None,
         filter: Optional[
             str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]]
         ] = None,
     ) -> Optional[str]:
-        """
-        Open a file selection dialog for selecting a file using Zenity.
+        r"""
+        Open a file selection dialog for selecting a file using KDialog.
 
         Args:
         - title (`str`, optional): The title of the file selection dialog.
@@ -72,7 +80,7 @@ class FileDialog(BaseFileDialog):
         - start_dir (`str`, optional): The starting directory for the dialog.
         - filter (`Optional[str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]]]`, optional):
             The filter for file types to display. For an example, head to documentation the
-            of `crossfiledialog.utils.filter_processor`.
+            of `whines_crossfiledialog.utils.filter_processor`.
 
         Returns:
         `Optional[str]`: The selected file's path.
@@ -81,27 +89,22 @@ class FileDialog(BaseFileDialog):
         result = open_file(title="Select a file", start_dir="/path/to/starting/directory", filter="*.txt")
 
         """
-        zenity_args: list[str] = []
-        zenity_kwargs = {"title": title}
+
+        kdialog_kwargs = {"title": title}
 
         if start_dir:
-            # If the path doesn't end with a backslash, Zenity only
-            # starts in the parent directory and selects the directory.
-            if start_dir[-1] != "/":
-                start_dir += "/"
-            zenity_kwargs["filename"] = start_dir
+            kdialog_kwargs["start_dir"] = start_dir
 
         if filter:
-            for i in filter_processor(filter, (" ", "{} | {}")):
-                zenity_args.append("file-filter={}".format(i))
+            kdialog_kwargs["filter"] = filter_processor(filter, (" ", "{} ({})"), " | ")
 
-        result = run_zenity("file-selection", *zenity_args, **zenity_kwargs)
+        result = run_kdialog("getopenfilename", **kdialog_kwargs)
         if result:
             set_last_cwd(result)
         return result
 
     @staticmethod
-    def open_multiple(  # noqa: C901
+    def open_multiple(
         title: str = strings.open_multiple,
         start_dir: Optional[str] = None,
         filter: Optional[
@@ -109,7 +112,7 @@ class FileDialog(BaseFileDialog):
         ] = None,
     ) -> list[str]:
         """
-        Open a file selection dialog for selecting multiple files using Zenity.
+        Open a file selection dialog for selecting multiple files using KDialog.
 
         Args:
         - title (`str`, optional): The title of the file selection dialog.
@@ -117,35 +120,35 @@ class FileDialog(BaseFileDialog):
         - start_dir (`str`, optional): The starting directory for the dialog.
         - filter (`Optional[str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]]]`, optional):
             The filter for file types to display. For an example, head to documentation the
-            of `crossfiledialog.utils.filter_processor`.
+            of `whines_crossfiledialog.utils.filter_processor`.
 
         Returns:
         `list[str]`: A list of selected file paths.
 
         Example:
-            result = open_multiple(title="Select multiple files",
-            start_dir="/path/to/starting/directory", filter="*.txt")
+        result = open_multiple(title="Select multiple files",
+        start_dir="/path/to/starting/directory", filter="*.txt")
 
         """
-        zenity_args: list[str] = []
-        zenity_kwargs = {"title": title}
+        kdialog_kwargs = {"title": title}
 
         if start_dir:
-            # If the path doesn't end with a backslash, Zenity only starts in the parent directory
-            # and selects the directory in the dialog.
-            if start_dir[-1] != "/":
-                start_dir += "/"
-            zenity_kwargs["filename"] = start_dir
+            kdialog_kwargs["start_dir"] = start_dir
 
         if filter:
-            for i in filter_processor(filter, (" ", "{} | {}")):
-                zenity_args.append("file-filter={}".format(i))
+            kdialog_kwargs["filter"] = filter_processor(filter, (" ", "{} ({})"), " | ")
 
-        result = run_zenity("file-selection", "multiple", *zenity_args, **zenity_kwargs)
-        split_result = result.split("|")
-        if split_result:
-            set_last_cwd(split_result[0])
-            return split_result
+        result = run_kdialog(
+            "getopenfilename",
+            "multiple",
+            "separate-output",
+            **kdialog_kwargs,
+        )
+
+        result_list = list(map(str.strip, result.split("\n")))
+        if result_list:
+            set_last_cwd(result_list[0])
+            return result_list
         return []
 
     @staticmethod
@@ -154,7 +157,7 @@ class FileDialog(BaseFileDialog):
         start_dir: Optional[str] = None,
     ) -> Optional[str]:
         """
-        Open a save file dialog using Zenity.
+        Open a save file dialog using KDialog.
 
         Args:
         - title (`str`, optional): The title of the save file dialog.
@@ -168,17 +171,13 @@ class FileDialog(BaseFileDialog):
         result = save_file(title="Save file", start_dir="/path/to/starting/directory")
 
         """
-        zenity_args = ["file-selection", "save", "confirm-overwrite"]
-        zenity_kwargs = {"title": title}
+        kdialog_args = ["getsavefilename"]
+        kdialog_kwargs = {"title": title}
 
         if start_dir:
-            # If the path doesn't end with a backslash, Zenity only starts in the parent directory
-            # and selects the directory in the dialog.
-            if start_dir[-1] != "/":
-                start_dir += "/"
-            zenity_kwargs["filename"] = start_dir
+            kdialog_kwargs["start_dir"] = start_dir
 
-        result = run_zenity(*zenity_args, **zenity_kwargs)
+        result = run_kdialog(*kdialog_args, **kdialog_kwargs)
         if result:
             set_last_cwd(result)
         return result
@@ -189,7 +188,7 @@ class FileDialog(BaseFileDialog):
         start_dir: Optional[str] = None,
     ) -> Optional[str]:
         """
-        Open a folder selection dialog using Zenity.
+        Open a folder selection dialog using KDialog.
 
         Args:
         - title (`str`, optional): The title of the folder selection dialog.
@@ -200,19 +199,15 @@ class FileDialog(BaseFileDialog):
         `str`: The selected folder's path.
 
         Example:
-            result = choose_folder(title="Select folder", start_dir="/path/to/starting/directory")
+        result = choose_folder(title="Select folder", start_dir="/path/to/starting/directory")
 
         """
-        zenity_kwargs = {"title": title}
+        kdialog_kwargs = {"title": title}
 
         if start_dir:
-            # If the path doesn't end with a backslash, Zenity only starts in the parent directory
-            # and selects the directory in the dialog.
-            if start_dir[-1] != "/":
-                start_dir += "/"
-            zenity_kwargs["filename"] = start_dir
+            kdialog_kwargs["start_dir"] = start_dir
 
-        result = run_zenity("file-selection", "directory", **zenity_kwargs)
+        result = run_kdialog("getexistingdirectory", **kdialog_kwargs)
         if result:
             set_last_cwd(result)
         return result

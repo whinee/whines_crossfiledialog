@@ -2,8 +2,8 @@ import sys
 from shutil import which
 from typing import Optional
 
-from crossfiledialog.exceptions import NoImplementationFoundException
-from crossfiledialog.utils import BaseFileDialog
+from whines_crossfiledialog.exceptions import NoImplementationFoundException
+from whines_crossfiledialog.utils import BaseFileDialog
 
 # Global variable to store picker preferences
 default_picker_preferences = ["kdialog", "pygobject", "qt", "zenity"]
@@ -35,28 +35,28 @@ def file_dialog(picker_preference: Optional[list[str]] = None) -> BaseFileDialog
         # Import pickers based on preferences
         for picker in preferred_picklers:
             if picker == "kdialog" and kdialog_binary:
-                from crossfiledialog.file_pickers.kdialog import (  # type: ignore[assignment]
+                from whines_crossfiledialog.file_pickers.kdialog import (  # type: ignore[assignment]
                     FileDialog,
                 )
 
                 return FileDialog
 
             if picker == "pygobject":
-                from crossfiledialog.file_pickers.pygobject import (  # type: ignore[assignment]
+                from whines_crossfiledialog.file_pickers.pygobject import (  # type: ignore[assignment]
                     FileDialog,
                 )
 
                 return FileDialog
 
             if picker == "qt":
-                from crossfiledialog.file_pickers.qt import (  # type: ignore[assignment]
+                from whines_crossfiledialog.file_pickers.qt import (  # type: ignore[assignment]
                     FileDialog,
                 )
 
                 return FileDialog
 
             if picker == "zenity" and zenity_binary:
-                from crossfiledialog.file_pickers.zenity import (  # type: ignore[assignment]
+                from whines_crossfiledialog.file_pickers.zenity import (  # type: ignore[assignment]
                     FileDialog,
                 )
 
@@ -66,7 +66,7 @@ def file_dialog(picker_preference: Optional[list[str]] = None) -> BaseFileDialog
 
     if sys.platform == "win32":
         print("win32")
-        from crossfiledialog.file_pickers.win32 import (  # type: ignore[assignment]
+        from whines_crossfiledialog.file_pickers.win32 import (  # type: ignore[assignment]
             FileDialog,
         )
 

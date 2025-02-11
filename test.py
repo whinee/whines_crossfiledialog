@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from crossfiledialog import file_dialog
+from whines_crossfiledialog import file_dialog
 
 CrossFileDialog = file_dialog(["pygobject"])
 

@@ -1,5 +1,7 @@
-
+# User-defined Ignored Folders
 .history/
+.idea/
+.venv/
 
 # User-defined Ignored Files
 **/*.bak
@@ -10,8 +12,7 @@
 **/*.old.*
 **/t[0-9]*.*
 **/test.*
-
-###
+poetry.lock
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,vim,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,vim,linux
@@ -186,8 +187,3 @@ tags
 [._]*.un~
 
 # End of https://www.toptal.com/developers/gitignore/api/python,vim,linux
-
-
-.idea
-.vscode
-.venv

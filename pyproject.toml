@@ -1,11 +1,12 @@
 [tool.poetry]
-name = "school"
-version = "0.0.0"
+name = "whines_crossfiledialog"
+version = "1.0.0"
 description = ""
 authors = ["whinee"]
+readme = "docs/README.md"
 
 packages = [
-    { include = "src" }
+    { include = "whines_crossfiledialog" }
 ]
 
 [tool.poetry.dependencies]

@@ -3,9 +3,9 @@ from typing import Optional
 
 import gi
 
-from crossfiledialog import strings
-from crossfiledialog.exceptions import FileDialogException
-from crossfiledialog.utils import BaseFileDialog, filter_processor
+from whines_crossfiledialog import strings
+from whines_crossfiledialog.exceptions import FileDialogException
+from whines_crossfiledialog.utils import BaseFileDialog, filter_processor
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk  # type: ignore # noqa: E402
@@ -51,7 +51,7 @@ class FileDialog(BaseFileDialog):
         - start_dir (`str`, optional): The starting directory for the dialog.
         - filter (`str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]]`, optional):
             The filter for file types to display. For an example, head to documentation the
-            of `crossfiledialog.utils.filter_processor`.
+            of `whines_crossfiledialog.utils.filter_processor`.
 
         Returns:
         `Optional[str]`: The selected file's path.
@@ -123,7 +123,7 @@ class FileDialog(BaseFileDialog):
         - start_dir (`str`, optional): The starting directory for the dialog.
         - filter (`str | list[str | list[str] | dict[str, str]] | dict[str, str | list[str]]`, optional):
             The filter for file types to display. For an example, head to documentation the
-            of `crossfiledialog.utils.filter_processor`.
+            of `whines_crossfiledialog.utils.filter_processor`.
 
         Returns:
         `list[str]`: A list of selected file paths.
