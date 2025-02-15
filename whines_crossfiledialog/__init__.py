@@ -29,12 +29,12 @@ def file_dialog(picker_preference: Optional[list[str]] = None) -> type[BaseFileD
         zenity_binary = which("zenity")
 
         # Get preferences
-        preferred_picklers = (
+        preferred_pickers = (
             picker_preference if picker_preference else default_picker_preferences
         )
 
         # Import pickers based on preferences
-        for picker in preferred_picklers:
+        for picker in preferred_pickers:
             if picker == "kdialog" and kdialog_binary:
                 from whines_crossfiledialog.file_pickers.kdialog import (  # type: ignore[assignment]
                     FileDialog,
@@ -66,7 +66,6 @@ def file_dialog(picker_preference: Optional[list[str]] = None) -> type[BaseFileD
         raise NoImplementationFoundException
 
     if sys.platform == "win32":
-        print("win32")
         from whines_crossfiledialog.file_pickers.win32 import (  # type: ignore[assignment]
             FileDialog,
         )

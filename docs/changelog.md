@@ -1,5 +1,23 @@
 # Changelog
 
+This changelog is based on [keepachangelog.com v1.1.0](https://keepachangelog.com/en/1.1.0/).
+
+**Types of Changes**
+
+- `Added` for new features.
+- `Changed` for changes in existing functionality.
+- `Deprecated` for soon-to-be removed features.
+- `Removed` for now removed features.
+- `Fixed` for any bug fixes.
+- `Security` in case of vulnerabilities.
+
+## Unreleased
+
+### Fixed
+
+- Typos in local variable names.
+- Removed unnecessary debug print statements.
+
 ## 1.0.0
 
 Initial Release of the package. Notable changes from the [original Github repository](https://github.com/maikelwever/crossfiledialog) include the following:

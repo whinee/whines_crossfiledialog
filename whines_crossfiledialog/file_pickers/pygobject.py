@@ -74,14 +74,12 @@ class FileDialog(BaseFileDialog):
         )
 
         preferred_cwd = get_preferred_cwd()
-        print(preferred_cwd)
         if start_dir:
             dialog.set_current_folder(start_dir)
         elif preferred_cwd:
             dialog.set_current_folder(preferred_cwd)
 
         if filter:
-            print(filter_processor(filter))
             for i in filter_processor(filter):
                 gtk_file_filter = Gtk.FileFilter()
 
@@ -147,14 +145,12 @@ class FileDialog(BaseFileDialog):
         dialog.set_select_multiple(True)
 
         preferred_cwd = get_preferred_cwd()
-        print(preferred_cwd)
         if start_dir:
             dialog.set_current_folder(start_dir)
         elif preferred_cwd:
             dialog.set_current_folder(preferred_cwd)
 
         if filter:
-            print(filter_processor(filter))
             for i in filter_processor(filter):
                 gtk_file_filter = Gtk.FileFilter()
 
@@ -214,7 +210,6 @@ class FileDialog(BaseFileDialog):
         dialog.set_select_multiple(True)
 
         preferred_cwd = get_preferred_cwd()
-        print(preferred_cwd)
         if start_dir:
             dialog.set_current_folder(start_dir)
         elif preferred_cwd:
